@@ -33,9 +33,23 @@
             <button class="back-btn" onclick="showDifficultyScreen()">← 뒤로</button>
             <h2 class="subtitle">스테이지 선택</h2>
             <div class="stage-container">
-                <button class="btn stage" onclick="startGame('stage1')">Stage 1</button>
-                <button class="btn stage" onclick="startGame('stage2')">Stage 2</button>
-                <button class="btn stage" onclick="startGame('stage3')">Stage 3</button>
+                <div class="stage-option">
+                    <button class="btn stage stage1" onclick="startGame('stage1')"></button>
+                    <div class="stage-label">Stage 1</div>
+                    <div class="stage-desc">서툴지만 열심히!<br> 건국이의 첫 알바 출근</div>
+                </div>
+            
+                <div class="stage-option">
+                    <button class="btn stage stage2" onclick="startGame('stage2')"></button>
+                    <div class="stage-label">Stage 2</div>
+                    <div class="stage-desc">매니저로 레벨업!<br> 가게는 이제 내 손에</div>
+                </div>
+            
+                <div class="stage-option">
+                    <button class="btn stage stage3" onclick="startGame('stage3')"></button>
+                    <div class="stage-label">Stage 3</div>
+                    <div class="stage-desc">점장 건국이 등장!<br> 나만의 주스로 승부한다</div>
+                </div>
             </div>
         </div>
 
