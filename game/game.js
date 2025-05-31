@@ -105,6 +105,32 @@ function initializeCanvas() {
     ctx.font = '16px Arial';
     ctx.fillText('게임이 곧 시작됩니다...', canvas.width / 2, canvas.height / 2 + 70);
 
+    // 📝 추가: #current-stage에 표시
+    const panalDiv = document.getElementById('stage-panal');
+    let difficultyColor = '#000';  // 기본 검정색
+    let difficultyLabel = '';
+
+    switch (currentDifficulty.toLowerCase()) {
+        case 'easy':
+            difficultyColor = '#2F9D27';
+            difficultyLabel = 'EASY';
+            break;
+        case 'normal':
+            difficultyColor = 'blue';
+            difficultyLabel = 'NORMAL';
+            break;
+        case 'hard':
+            difficultyColor = 'red';
+            difficultyLabel = 'HARD';
+            break;
+    }
+
+    const stageDiv = document.getElementById('current-stage');
+    const difficultyDiv = document.getElementById('current-difficulty');
+
+    stageDiv.innerHTML = `STAGE ${currentStage.slice(-1)}`;
+    difficultyDiv.innerHTML = `<span style="color:${difficultyColor}; font-weight:bold;">${difficultyLabel}</span>`;
+
     // 기본 과일과 공 정의
     
     class Ball {
