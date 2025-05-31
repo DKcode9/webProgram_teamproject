@@ -131,7 +131,8 @@ function initializeCanvas() {
             difficultyLabel = 'HARD';
             break;
     }
-
+      
+      
     // 게임 세팅
     setStage();
 
@@ -279,11 +280,11 @@ function setStage(){
     }
 
 
-     // 난이도, 스테이지별로 손님 세팅
+    // 난이도, 스테이지별로 손님 세팅
+    applyGuestBorders(currentStage, currentDifficulty);
 
 
-
-     // 난이도, 스테이지별로 레시피 세팅
+    // 난이도, 스테이지별로 레시피 세팅
 }
 
 function resetGame() {
@@ -316,4 +317,62 @@ function playButtonSound() {
     const se = document.getElementById('button-sound');
     se.currentTime = 0;
     se.play();
+}
+
+const guestData = {
+    stage1: {
+        easy:    { good: 2, normal: 5, bad: 0 },
+        normal:  { good: 1, normal: 5, bad: 1 },
+        hard:    { good: 0, normal: 5, bad: 2 }
+    },
+    stage2: {
+        easy:    { good: 2, normal: 5, bad: 0 },
+        normal:  { good: 1, normal: 5, bad: 1 },
+        hard:    { good: 0, normal: 5, bad: 2 }
+    },
+    stage3: {
+        easy:    { good: 2, normal: 5, bad: 0 },
+        normal:  { good: 1, normal: 5, bad: 1 },
+        hard:    { good: 0, normal: 5, bad: 2 }
+    }
+};
+
+function applyGuestBorders(stage, difficulty) {
+    const cards = document.querySelectorAll('.card');
+
+    // 모든 카드 초기화
+    cards.forEach(card => {
+        card.style.border = '2px solid #ccc'; // 기본 회색
+    });
+
+    const stageKey = `stage${stage.slice(-1)}`;
+    const guestCounts = guestData[stageKey]?.[difficulty.toLowerCase()];
+
+    if (!guestCounts) {
+        console.warn(`손님 데이터가 존재하지 않습니다: stage=${stage}, difficulty=${difficulty}`);
+        return;
+    }
+
+    let index = 0;
+
+    // 착한손님 (초록색)
+    for (let i = 0; i < guestCounts.good; i++) {
+        if (index >= cards.length) break;
+        cards[index].style.border = '3px solid green';
+        index++;
+    }
+
+    // 일반손님 (파란색)
+    for (let i = 0; i < guestCounts.normal; i++) {
+        if (index >= cards.length) break;
+        cards[index].style.border = '3px solid blue';
+        index++;
+    }
+
+    // 진상손님 (빨간색)
+    for (let i = 0; i < guestCounts.bad; i++) {
+        if (index >= cards.length) break;
+        cards[index].style.border = '3px solid red';
+        index++;
+    }
 }
