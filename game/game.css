@@ -368,3 +368,43 @@ body {
     padding-left: 0;
     margin-top: 2px;
 }
+
+/* 바구니 */
+
+.basket {
+    flex: 0 0 auto;   /* 높이 고정 (flex-grow: 0, flex-shrink: 0) */
+    height: 280px;
+    margin: 10px;
+    padding: 4px;
+    width: 95%;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.fruit {
+    display: flex;
+    justify-content: space-between;  /* 왼쪽: 과일명, 오른쪽: 개수 */
+    align-items: center;
+    width: 100%;                     /* 부모 크기에 맞춤 */
+    box-sizing: border-box;          /* padding 포함 */
+    padding: 4px 8px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    margin-bottom: 4px;
+}
+
+.fruit-content {
+    flex: 1;                          /* 왼쪽에 넓게 차지 */
+    text-align: left;
+    font-weight: bold;
+    color: #333;
+}
+
+#f1, #f2, #f3, #f4, #f5, #f6, #f7, #f8 {
+    min-width: 40px;                 /* 동일한 폭 확보 (필요에 따라 조절) */
+    text-align: right;
+    font-weight: bold;
+    color: #333;
+}
