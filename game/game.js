@@ -64,12 +64,22 @@ function showSettingsScreen() {
 function startGame(stage) {
     currentStage = stage;
     hideAllScreens();
-    $('#game-screen').addClass('active');
-    
-    initializeCanvas();
+
+    // 각 스테이지에 해당하는 스토리 화면 보여주기
+    if (stage === 'stage1') {
+        $('#stage1-story-screen').addClass('active');
+    } else if (stage === 'stage2') {
+        $('#stage2-story-screen').addClass('active');
+    } else if (stage === 'stage3') {
+        $('#stage3-story-screen').addClass('active');
+    }
 }
 
-
+function proceedToGame() {
+    hideAllScreens();
+    $('#game-screen').addClass('active');
+    initializeCanvas();
+}
 
 
 
