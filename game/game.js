@@ -290,3 +290,30 @@ function resetGame() {
    
 }
 
+
+
+function startGameWithBgm() {
+    const bgm = document.getElementById('main-bgm');
+    if (bgm.paused) {
+        bgm.volume = 0.5;
+        bgm.play();
+    }
+
+    showDifficultyScreen();
+}
+
+function startSettingsWithBgm() {
+    const bgm = document.getElementById('main-bgm');
+    if (bgm.paused) {
+        bgm.volume = 0.5;
+        bgm.play();
+    }
+
+    showSettingsScreen();
+}
+
+function playButtonSound() {
+    const se = document.getElementById('button-sound');
+    se.currentTime = 0;
+    se.play();
+}

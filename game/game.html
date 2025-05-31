@@ -10,27 +10,25 @@
   </head>
   <body>
     <div class="container">
-      <!------------ 메인 화면 ------------>
-      <div class="screen active" id="main-screen">
-        <h1 class="title">게임</h1>
-        <button class="btn" onclick="showDifficultyScreen()">게임 시작</button>
-        <button class="btn secondary" onclick="showSettingsScreen()">
-          환경설정
-        </button>
-      </div>
+        <!------------ 메인 화면 ------------>
+        <div class="screen active" id="main-screen">
+            <h1 class="title">게임</h1>
+            <button class="btn" onclick="playButtonSound(); startGameWithBgm()">게임 시작</button>
+            <button class="btn secondary" onclick="playButtonSound(); startSettingsWithBgm()">환경설정</button>
+        </div>
 
       <!------------ 난이도 선택 화면 ------------>
       <div class="screen" id="difficulty-screen">
         <button class="back-btn" onclick="showMainScreen()">← 뒤로</button>
         <h2 class="subtitle">난이도 선택</h2>
         <div class="difficulty-container">
-          <button class="btn difficulty" onclick="showStageScreen('easy')">
+          <button class="btn difficulty" onclick="playButtonSound(); showStageScreen('easy')">
             Easy
           </button>
-          <button class="btn difficulty" onclick="showStageScreen('normal')">
+          <button class="btn difficulty" onclick="playButtonSound(); showStageScreen('normal')">
             Normal
           </button>
-          <button class="btn difficulty" onclick="showStageScreen('hard')">
+          <button class="btn difficulty" onclick="playButtonSound(); showStageScreen('hard')">
             Hard
           </button>
         </div>
@@ -144,139 +142,147 @@
         <button class="btn" onclick="proceedToGame()">다음</button>
       </div>
 
-      <!------------ 게임 화면 ------------>
-      <div class="screen" id="game-screen">
-        <button class="back-btn" onclick="proceedToStageScreen()">
-          ← 뒤로
-        </button>
-        <div class="game-layout">
-          <!------------ 왼쪽 영역 - 명함 리스트 ------------>
-          <div class="left-panel">
-            <div class="card-container">
-              <div class="card">
-                <div class="card-image"></div>
-                <div class="card-text">명함 1</div>
-              </div>
-              <div class="card">
-                <div class="card-image"></div>
-                <div class="card-text">명함 2</div>
-              </div>
-              <div class="card">
-                <div class="card-image"></div>
-                <div class="card-text">명함 3</div>
-              </div>
-              <div class="card">
-                <div class="card-image"></div>
-                <div class="card-text">명함 4</div>
-              </div>
-              <div class="card">
-                <div class="card-image"></div>
-                <div class="card-text">명함 5</div>
-              </div>
-              <div class="card">
-                <div class="card-image"></div>
-                <div class="card-text">명함 6</div>
-              </div>
-              <div class="card">
-                <div class="card-image"></div>
-                <div class="card-text">명함 7</div>
-              </div>
-            </div>
-          </div>
+         <!------------ 게임 화면 ------------>
+        <div class="screen" id="game-screen">
+            <button class="back-btn" onclick="showStageScreen()">← 뒤로</button>
+            <div class="game-layout">
+                <!------------ 왼쪽 영역 - 명함 리스트 ------------>
+                <div class="left-panel">
+                    <div class="card-container">
+                        <div class="card">
+                            <div class="card-image"></div>
+                            <div class="card-text">명함 1</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-image"></div>
+                            <div class="card-text">명함 2</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-image"></div>
+                            <div class="card-text">명함 3</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-image"></div>
+                            <div class="card-text">명함 4</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-image"></div>
+                            <div class="card-text">명함 5</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-image"></div>
+                            <div class="card-text">명함 6</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-image"></div>
+                            <div class="card-text">명함 7</div>
+                        </div>
+                    </div>
+                </div>
+                
+                 <!------------ 가운데 영역 ------------>
+                 <div class="center-panel">
+                    <canvas id="game-canvas"></canvas>
+                </div>
+                
+                <!------------ 오른쪽 영역: 위/아래 나눔 ------------>
+                <div class="right-panel">
+                    <div class="right-top-panel">
+                        <div class="panel-content recipe-list">
 
-          <!------------ 가운데 영역 ------------>
-          <div class="center-panel">
-            <canvas id="game-canvas"></canvas>
-          </div>
-
-          <!------------ 오른쪽 영역: 위/아래 나눔 ------------>
-          <div class="right-panel">
-            <div id="stage-panal">
-              <div id="current-stage"></div>
-              <div id="current-difficulty"></div>
+                            <div class="recipe">
+                                <div class="recipe-header">
+                                    <img class="recipe-image" src="designs/recipe1.png" alt="체리 딸기 주스">
+                                    <div>
+                                        <div class="recipe-name">체리 딸기 주스</div>
+                                        <ul class="ingredient-list">
+                                            <li>체리 X 1</li>
+                                            <li>딸기 X 1</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                    
+                            <div class="recipe">
+                                <div class="recipe-header">
+                                    <img class="recipe-image" src="designs/recipe2.png" alt="포도 한라봉 주스">
+                                    <div>
+                                        <div class="recipe-name">포도 한라봉 주스</div>
+                                        <ul class="ingredient-list">
+                                            <li>포도 X 1</li>
+                                            <li>한라봉 X 1</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                    
+                            <div class="recipe">
+                                <div class="recipe-header">
+                                    <img class="recipe-image" src="designs/recipe3.png" alt="사과 복숭아 주스">
+                                    <div>
+                                        <div class="recipe-name">사과 복숭아 주스</div>
+                                        <ul class="ingredient-list">
+                                            <li>사과 X 1</li>
+                                            <li>복숭아 X 1</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                    
+                            <div class="recipe">
+                                <div class="recipe-header">
+                                    <img class="recipe-image" src="designs/recipe4.png" alt="파인애플 수박 주스">
+                                    <div>
+                                        <div class="recipe-name">파인애플 수박 주스</div>
+                                        <ul class="ingredient-list">
+                                            <li>파인애플 X 1</li>
+                                            <li>수박 X 1</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                    
+                            <div class="recipe">
+                                <div class="recipe-header">
+                                    <img class="recipe-image" src="designs/recipe5.png" alt="궁극의 과일 주스">
+                                    <div>
+                                        <div class="recipe-name">궁극의 과일 주스</div>
+                                        <ul class="ingredient-list">
+                                            <li>체리 X 1</li>
+                                            <li>딸기 X 1</li>
+                                            <li>포도 X 1</li>
+                                            <li>한라봉 X 1</li>
+                                            <li>사과 X 1</li>
+                                            <li>복숭아 X 1</li>
+                                            <li>파인애플 X 1</li>
+                                            <li>수박 X 1</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                    
+                        </div>
+                    </div>
+                    <div class="right-bottom-panel">
+                        <div class="panel-content">바구니</div>
+                    </div>
+                </div>
             </div>
-
-            <div class="right-top-panel">
-              <div class="panel-content">레시피</div>
-              <div class="recipe-container">
-                <div class="recipe">
-                  <div class="recipe-title">레시피 1</div>
-                  <div class="recipe-content">레시피 1</div>
-                </div>
-                <div class="recipe">
-                  <div class="recipe-title">레시피 2</div>
-                  <div class="recipe-content">레시피 2</div>
-                </div>
-                <div class="recipe">
-                  <div class="recipe-title">레시피 3</div>
-                  <div class="recipe-content">레시피 3</div>
-                </div>
-                <div class="recipe">
-                  <div class="recipe-title">레시피 4</div>
-                  <div class="recipe-content">레시피 4</div>
-                </div>
-                <div class="recipe">
-                  <div class="recipe-title">레시피 5</div>
-                  <div class="recipe-content">레시피 5</div>
-                </div>
-                <div class="recipe">
-                  <div class="recipe-title">레시피 6</div>
-                  <div class="recipe-content">레시피 7</div>
-                </div>
-                <div class="recipe">
-                  <div class="recipe-title">레시피 7</div>
-                  <div class="recipe-content">레시피 7</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="right-bottom-panel">
-              <div class="panel-content">바구니</div>
-              <div class="basket">
-                <div class="fruit">
-                  <div class="fruit-content">과일1</div>
-                  <div id="f1">0</div>
-                </div>
-                <div class="fruit">
-                  <div class="fruit-content">과일2</div>
-                  <div id="f2">0</div>
-                </div>
-                <div class="fruit">
-                  <div class="fruit-content">과일3</div>
-                  <div id="f3">0</div>
-                </div>
-                <div class="fruit">
-                  <div class="fruit-content">과일4</div>
-                  <div id="f4">0</div>
-                </div>
-                <div class="fruit">
-                  <div class="fruit-content">과일5</div>
-                  <div id="f5">0</div>
-                </div>
-                <div class="fruit">
-                  <div class="fruit-content">과일6</div>
-                  <div id="f6">0</div>
-                </div>
-                <div class="fruit">
-                  <div class="fruit-content">과일7</div>
-                  <div id="f7">0</div>
-                </div>
-                <div class="fruit">
-                  <div class="fruit-content">과일8</div>
-                  <div id="f8">0</div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
 
-      <!------------ 환경설정 화면 ------------>
-      <div class="screen" id="settings-screen">
-        <button class="back-btn" onclick="showMainScreen()">← 뒤로</button>
-        <h2 class="subtitle">환경설정</h2>
-        <div class="settings-content">볼륨 조절</div>
-      </div>
-    </div>
-  </body>
+        <!------------ 환경설정 화면 ------------>
+        <div class="screen" id="settings-screen">
+            <button class="back-btn" onclick="showMainScreen()">← 뒤로</button>
+            <h2 class="subtitle">환경설정</h2>
+            <div class="settings-content">
+                볼륨 조절
+            </div>
+        </div>
+
+        <!------------ 게임 배경음악 ------------>
+        <audio id="main-bgm" src="SE/main_bgm.mp3" loop></audio>
+
+        <!-- 효과음용 오디오 -->
+        <audio id="button-sound" src="SE/click.wav"></audio> 
+</body>
 </html>
