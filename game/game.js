@@ -127,6 +127,9 @@ function initializeCanvas() {
             break;
     }
 
+    // 게임 세팅
+    setStage();
+
     const stageDiv = document.getElementById('current-stage');
     const difficultyDiv = document.getElementById('current-difficulty');
 
@@ -249,7 +252,35 @@ function initializeCanvas() {
 
 
 
+
+
+
+
+
 /**
  * 게임 부분 추가
  * 
  */
+
+function setStage(){
+
+    // 카운터 리셋
+    for (let i = 1; i <= 8; i++) {
+        const counter = document.getElementById(`f${i}`);
+        if (counter) {
+            counter.textContent = "0";
+        }
+    }
+
+
+     // 난이도, 스테이지별로 손님 세팅
+
+
+
+     // 난이도, 스테이지별로 레시피 세팅
+}
+
+function resetGame() {
+   
+}
+
