@@ -13,8 +13,8 @@
         <!------------ 메인 화면 ------------>
         <div class="screen active" id="main-screen">
             <h1 class="title">게임</h1>
-            <button class="btn" onclick="showDifficultyScreen()">게임 시작</button>
-            <button class="btn secondary" onclick="showSettingsScreen()">환경설정</button>
+            <button class="btn" onclick="playButtonSound(); startGameWithBgm()">게임 시작</button>
+            <button class="btn secondary" onclick="playButtonSound(); startSettingsWithBgm()">환경설정</button>
         </div>
 
         <!------------ 난이도 선택 화면 ------------>
@@ -22,9 +22,9 @@
             <button class="back-btn" onclick="showMainScreen()">← 뒤로</button>
             <h2 class="subtitle">난이도 선택</h2>
             <div class="difficulty-container">
-                <button class="btn difficulty" onclick="showStageScreen('easy')">Easy</button>
-                <button class="btn difficulty" onclick="showStageScreen('normal')">Normal</button>
-                <button class="btn difficulty" onclick="showStageScreen('hard')">Hard</button>
+                <button class="btn difficulty" onclick="playButtonSound(); showStageScreen('easy')">Easy</button>
+                <button class="btn difficulty" onclick="playButtonSound(); showStageScreen('normal')">Normal</button>
+                <button class="btn difficulty" onclick="playButtonSound(); showStageScreen('hard')">Hard</button>
             </div>
         </div>
 
@@ -99,7 +99,80 @@
                 <!------------ 오른쪽 영역: 위/아래 나눔 ------------>
                 <div class="right-panel">
                     <div class="right-top-panel">
-                        <div class="panel-content">레시피</div>
+                        <div class="panel-content recipe-list">
+
+                            <div class="recipe">
+                                <div class="recipe-header">
+                                    <img class="recipe-image" src="designs/recipe1.png" alt="체리 딸기 주스">
+                                    <div>
+                                        <div class="recipe-name">체리 딸기 주스</div>
+                                        <ul class="ingredient-list">
+                                            <li>체리 X 1</li>
+                                            <li>딸기 X 1</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                    
+                            <div class="recipe">
+                                <div class="recipe-header">
+                                    <img class="recipe-image" src="designs/recipe2.png" alt="포도 한라봉 주스">
+                                    <div>
+                                        <div class="recipe-name">포도 한라봉 주스</div>
+                                        <ul class="ingredient-list">
+                                            <li>포도 X 1</li>
+                                            <li>한라봉 X 1</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                    
+                            <div class="recipe">
+                                <div class="recipe-header">
+                                    <img class="recipe-image" src="designs/recipe3.png" alt="사과 복숭아 주스">
+                                    <div>
+                                        <div class="recipe-name">사과 복숭아 주스</div>
+                                        <ul class="ingredient-list">
+                                            <li>사과 X 1</li>
+                                            <li>복숭아 X 1</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                    
+                            <div class="recipe">
+                                <div class="recipe-header">
+                                    <img class="recipe-image" src="designs/recipe4.png" alt="파인애플 수박 주스">
+                                    <div>
+                                        <div class="recipe-name">파인애플 수박 주스</div>
+                                        <ul class="ingredient-list">
+                                            <li>파인애플 X 1</li>
+                                            <li>수박 X 1</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                    
+                            <div class="recipe">
+                                <div class="recipe-header">
+                                    <img class="recipe-image" src="designs/recipe5.png" alt="궁극의 과일 주스">
+                                    <div>
+                                        <div class="recipe-name">궁극의 과일 주스</div>
+                                        <ul class="ingredient-list">
+                                            <li>체리 X 1</li>
+                                            <li>딸기 X 1</li>
+                                            <li>포도 X 1</li>
+                                            <li>한라봉 X 1</li>
+                                            <li>사과 X 1</li>
+                                            <li>복숭아 X 1</li>
+                                            <li>파인애플 X 1</li>
+                                            <li>수박 X 1</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                    
+                        </div>
                     </div>
                     <div class="right-bottom-panel">
                         <div class="panel-content">바구니</div>
@@ -116,3 +189,11 @@
                 볼륨 조절
             </div>
         </div>
+
+        <!------------ 게임 배경음악 ------------>
+        <audio id="main-bgm" src="SE/main_bgm.mp3" loop></audio>
+
+        <!-- 효과음용 오디오 -->
+        <audio id="button-sound" src="SE/click.wav"></audio> 
+</body>
+</html>

@@ -67,3 +67,29 @@ function initializeCanvas() {
     ctx.font = '16px Arial';
     ctx.fillText('게임이 곧 시작됩니다...', canvas.width/2, canvas.height/2 + 70);
 }
+
+function startGameWithBgm() {
+    const bgm = document.getElementById('main-bgm');
+    if (bgm.paused) {
+        bgm.volume = 0.5;
+        bgm.play();
+    }
+
+    showDifficultyScreen();
+}
+
+function startSettingsWithBgm() {
+    const bgm = document.getElementById('main-bgm');
+    if (bgm.paused) {
+        bgm.volume = 0.5;
+        bgm.play();
+    }
+
+    showSettingsScreen();
+}
+
+function playButtonSound() {
+    const se = document.getElementById('button-sound');
+    se.currentTime = 0;
+    se.play();
+}
