@@ -28,9 +28,34 @@
             </div>
         </div>
 
+
+
+        <div class="screen" id="story-screen">
+            <button class="back-btn" onclick="showDifficultyScreen()">← 뒤로</button>
+            <h2 class="subtitle">아르바이트 첫 출근</h2>
+            <p>
+                방학 동안 등록금을 벌기 위해 집 근처 과일 주스 가게에 아르바이트로 들어간 건국이.<br>
+                특별히 잘하는 것도 없고 서비스 일도 처음이라 서툴지만, 지각하지 않고 맡은 일은 책임감 있게 해내려 노력한다.<br>
+                손님에게 밝게 인사하고, 재료를 정리하며 서서히 일에 익숙해진다.<br> 
+                과일을 깨서 주스를 만들어 보세요!
+            </p>
+            <button class="btn" onclick="showRuleScreen()">다음</button>
+        </div>
+
+        <div class="screen" id="rule-screen">
+            <button class="back-btn" onclick="showStoryScreen()">← 뒤로</button>
+            <h2 class="subtitle">게임 규칙</h2>
+            <p>
+                게임 규칙 설명
+            </p>
+            <button class="btn" onclick="proceedToStageScreen()">다음</button>
+        </div>
+
+
+
         <!------------ 스테이지 선택 화면 ------------>
         <div class="screen" id="stage-screen">
-            <button class="back-btn" onclick="showDifficultyScreen()">← 뒤로</button>
+            <button class="back-btn" onclick="showRuleScreen()">← 뒤로</button>
             <h2 class="subtitle">스테이지 선택</h2>
             <div class="stage-container">
                 <div class="stage-option">
@@ -55,7 +80,7 @@
 
          <!------------ 게임 화면 ------------>
         <div class="screen" id="game-screen">
-            <button class="back-btn" onclick="showStageScreen()">← 뒤로</button>
+            <button class="back-btn" onclick="proceedToStageScreen()">← 뒤로</button>
             <div class="game-layout">
                 <!------------ 왼쪽 영역 - 명함 리스트 ------------>
                 <div class="left-panel">
@@ -91,8 +116,8 @@
                     </div>
                 </div>
                 
-                 <!------------ 가운데 영역 ------------>
-                 <div class="center-panel">
+                <!------------ 가운데 영역 ------------>
+                <div class="center-panel">
                     <canvas id="game-canvas"></canvas>
                 </div>
                 
