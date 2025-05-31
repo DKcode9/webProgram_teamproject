@@ -343,6 +343,10 @@ function applyGuestBorders(stage, difficulty) {
     // 모든 카드 초기화
     cards.forEach(card => {
         card.style.border = '2px solid #ccc'; // 기본 회색
+        const textDiv = card.querySelector('.card-text');
+        if (textDiv) {
+            textDiv.textContent = '';  // 기존 텍스트 초기화
+        }
     });
 
     const stageKey = `stage${stage.slice(-1)}`;
@@ -359,6 +363,10 @@ function applyGuestBorders(stage, difficulty) {
     for (let i = 0; i < guestCounts.good; i++) {
         if (index >= cards.length) break;
         cards[index].style.border = '3px solid green';
+        const textDiv = cards[index].querySelector('.card-text');
+        if (textDiv) {
+            textDiv.textContent = '착한 손님';
+        }
         index++;
     }
 
@@ -366,6 +374,10 @@ function applyGuestBorders(stage, difficulty) {
     for (let i = 0; i < guestCounts.normal; i++) {
         if (index >= cards.length) break;
         cards[index].style.border = '3px solid blue';
+        const textDiv = cards[index].querySelector('.card-text');
+        if (textDiv) {
+            textDiv.textContent = '일반 손님';
+        }
         index++;
     }
 
@@ -373,6 +385,65 @@ function applyGuestBorders(stage, difficulty) {
     for (let i = 0; i < guestCounts.bad; i++) {
         if (index >= cards.length) break;
         cards[index].style.border = '3px solid red';
+        const textDiv = cards[index].querySelector('.card-text');
+        if (textDiv) {
+            textDiv.textContent = '진상 손님';
+        }
         index++;
     }
 }
+
+
+const specialRecipes = [
+  {
+    name: "특수레시피1",
+    stages: [1, 2, 3],
+    juiceName: "체리 딸기 주스",
+    ingredients: [
+      { fruit: "과일1", count: 1 },
+      { fruit: "과일2", count: 1 }
+    ]
+  },
+  {
+    name: "특수레시피2",
+    stages: [1, 2, 3],
+    juiceName: "포도 한라봉 주스",
+    ingredients: [
+      { fruit: "과일3", count: 1 },
+      { fruit: "과일4", count: 1 }
+    ]
+  },
+  {
+    name: "특수레시피3",
+    stages: [2, 3],
+    juiceName: "사과 복숭아 주스",
+    ingredients: [
+      { fruit: "과일5", count: 1 },
+      { fruit: "과일6", count: 1 }
+    ]
+  },
+  {
+    name: "특수레시피4",
+    stages: [2, 3],
+    juiceName: "파인애플 수박 주스",
+    ingredients: [
+      { fruit: "과일7", count: 1 },
+      { fruit: "과일8", count: 1 }
+    ]
+  },
+  {
+    name: "특수레시피5",
+    stages: [3],
+    juiceName: "궁극의 과일 주스",
+    ingredients: [
+      { fruit: "과일1", count: 1 },
+      { fruit: "과일2", count: 1 },
+      { fruit: "과일3", count: 1 },
+      { fruit: "과일4", count: 1 },
+      { fruit: "과일5", count: 1 },
+      { fruit: "과일6", count: 1 },
+      { fruit: "과일7", count: 1 },
+      { fruit: "과일8", count: 1 }
+    ]
+  }
+];
