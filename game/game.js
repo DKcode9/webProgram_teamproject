@@ -86,6 +86,8 @@ function proceedToGame() {
 function initializeCanvas() {
     const canvas = document.getElementById('game-canvas');
     const ctx = canvas.getContext('2d');
+    canvas.addEventListener("click", handleClick);
+    
 
     canvas.width = 400;
     canvas.height = 600;
@@ -210,6 +212,37 @@ function initializeCanvas() {
         fruits.forEach(fruit => {
             ctx.drawImage(fruit.img, fruit.x, fruit.y, fruit.size, fruit.size);
         });
+    }
+
+    function handleClick(event) {
+    const rect = canvas.getBoundingClientRect();
+    const clickX = event.clientX - rect.left;
+    const clickY = event.clientY - rect.top;
+
+    for (let i = 0; i < fruits.length; i++) {
+        const fruit = fruits[i];
+        if (
+            clickX >= fruit.x &&
+            clickX <= fruit.x + fruit.size &&
+            clickY >= fruit.y &&
+            clickY <= fruit.y + fruit.size
+        ) {
+            // 클릭한 과일 제거
+            fruits.splice(i, 1);
+
+            // 카운터 증가
+            const fruitIndex = fruitImages.indexOf(fruit.img) + 1; // 1~8
+            const counter = document.getElementById(`f${fruitIndex}`);
+            if (counter) {
+                const currentCount = parseInt(counter.textContent) || 0;
+                counter.textContent = currentCount + 1;
+            }
+
+            // 캔버스 다시 그리기
+            drawFruits();
+            break; // 하나만 처리 후 종료
+        }
+    }
     }
 }
 
