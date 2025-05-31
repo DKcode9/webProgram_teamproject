@@ -83,7 +83,12 @@ function proceedToGame() {
 
 
 
+let fruits = [];  
+let fruitImages = [];  
+
 function initializeCanvas() {
+    fruits = [];  // 초기화
+    fruitImages = [];  // 초기화
     const canvas = document.getElementById('game-canvas');
     const ctx = canvas.getContext('2d');
     canvas.addEventListener("click", handleClick);
@@ -153,8 +158,6 @@ function initializeCanvas() {
 
     // 🍎 이미지 랜덤 배치
     const fruitCount = 8;
-    const fruits = [];
-    const fruitImages = [];
     const fruitSizes = [];
 
     for (let i = 0; i < fruitCount; i++) {
@@ -218,34 +221,37 @@ function initializeCanvas() {
     }
 
     function handleClick(event) {
-    const rect = canvas.getBoundingClientRect();
-    const clickX = event.clientX - rect.left;
-    const clickY = event.clientY - rect.top;
+        const rect = canvas.getBoundingClientRect();
+        const clickX = event.clientX - rect.left;
+        const clickY = event.clientY - rect.top;
 
-    for (let i = 0; i < fruits.length; i++) {
-        const fruit = fruits[i];
-        if (
-            clickX >= fruit.x &&
-            clickX <= fruit.x + fruit.size &&
-            clickY >= fruit.y &&
-            clickY <= fruit.y + fruit.size
-        ) {
-            // 클릭한 과일 제거
-            fruits.splice(i, 1);
+        let clickedFruit = null;
+        for (let i = 0; i < fruits.length; i++) {
+            const fruit = fruits[i];
+            if (
+                clickX >= fruit.x &&
+                clickX <= fruit.x + fruit.size &&
+                clickY >= fruit.y &&
+                clickY <= fruit.y + fruit.size
+            ) {
+                clickedFruit = fruit;
+                fruits.splice(i, 1);  // 과일 삭제
+                break;
+            }
+        }
 
+        if (clickedFruit) {
             // 카운터 증가
-            const fruitIndex = fruitImages.indexOf(fruit.img) + 1; // 1~8
+            const fruitIndex = fruitImages.indexOf(clickedFruit.img) + 1;
             const counter = document.getElementById(`f${fruitIndex}`);
             if (counter) {
                 const currentCount = parseInt(counter.textContent) || 0;
                 counter.textContent = currentCount + 1;
             }
-
-            // 캔버스 다시 그리기
-            drawFruits();
-            break; // 하나만 처리 후 종료
         }
-    }
+
+        // 과일이 하나라도 사라졌을 때만 다시 그리기
+        drawFruits();
     }
 }
 
