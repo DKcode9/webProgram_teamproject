@@ -319,79 +319,7 @@ function playButtonSound() {
     se.play();
 }
 
-const guestData = {
-    stage1: {
-        easy:    { good: 2, normal: 5, bad: 0 },
-        normal:  { good: 1, normal: 5, bad: 1 },
-        hard:    { good: 0, normal: 5, bad: 2 }
-    },
-    stage2: {
-        easy:    { good: 2, normal: 5, bad: 0 },
-        normal:  { good: 1, normal: 5, bad: 1 },
-        hard:    { good: 0, normal: 5, bad: 2 }
-    },
-    stage3: {
-        easy:    { good: 2, normal: 5, bad: 0 },
-        normal:  { good: 1, normal: 5, bad: 1 },
-        hard:    { good: 0, normal: 5, bad: 2 }
-    }
-};
 
-function applyGuestBorders(stage, difficulty) {
-    const cards = document.querySelectorAll('.card');
-
-    // 모든 카드 초기화
-    cards.forEach(card => {
-        card.style.border = '2px solid #ccc'; // 기본 회색
-        const textDiv = card.querySelector('.card-text');
-        if (textDiv) {
-            textDiv.textContent = '';  // 기존 텍스트 초기화
-        }
-    });
-
-    const stageKey = `stage${stage.slice(-1)}`;
-    const guestCounts = guestData[stageKey]?.[difficulty.toLowerCase()];
-
-    if (!guestCounts) {
-        console.warn(`손님 데이터가 존재하지 않습니다: stage=${stage}, difficulty=${difficulty}`);
-        return;
-    }
-
-    let index = 0;
-
-    // 착한손님 (초록색)
-    for (let i = 0; i < guestCounts.good; i++) {
-        if (index >= cards.length) break;
-        cards[index].style.border = '3px solid green';
-        const textDiv = cards[index].querySelector('.card-text');
-        if (textDiv) {
-            textDiv.textContent = '착한 손님';
-        }
-        index++;
-    }
-
-    // 일반손님 (파란색)
-    for (let i = 0; i < guestCounts.normal; i++) {
-        if (index >= cards.length) break;
-        cards[index].style.border = '3px solid blue';
-        const textDiv = cards[index].querySelector('.card-text');
-        if (textDiv) {
-            textDiv.textContent = '일반 손님';
-        }
-        index++;
-    }
-
-    // 진상손님 (빨간색)
-    for (let i = 0; i < guestCounts.bad; i++) {
-        if (index >= cards.length) break;
-        cards[index].style.border = '3px solid red';
-        const textDiv = cards[index].querySelector('.card-text');
-        if (textDiv) {
-            textDiv.textContent = '진상 손님';
-        }
-        index++;
-    }
-}
 
 
 const specialRecipes = [
@@ -447,3 +375,287 @@ const specialRecipes = [
     ]
   }
 ];
+
+
+
+
+const normalRecipes = [
+  // Count 1
+  {
+    name: "과일1주스-1개",
+    stages: [1, 2, 3],
+    juiceName: "과일1 주스",
+    ingredients: [
+      { fruit: "과일1", count: 1 }
+    ]
+  },
+  {
+    name: "과일2주스-1개",
+    stages: [1, 2, 3],
+    juiceName: "과일2 주스",
+    ingredients: [
+      { fruit: "과일2", count: 1 }
+    ]
+  },
+  {
+    name: "과일3주스-1개",
+    stages: [1, 2, 3],
+    juiceName: "과일3 주스",
+    ingredients: [
+      { fruit: "과일3", count: 1 }
+    ]
+  },
+  {
+    name: "과일4주스-1개",
+    stages: [1, 2, 3],
+    juiceName: "과일4 주스",
+    ingredients: [
+      { fruit: "과일4", count: 1 }
+    ]
+  },
+  {
+    name: "과일5주스-1개",
+    stages: [2, 3],
+    juiceName: "과일5 주스",
+    ingredients: [
+      { fruit: "과일5", count: 1 }
+    ]
+  },
+  {
+    name: "과일6주스-1개",
+    stages: [2, 3],
+    juiceName: "과일6 주스",
+    ingredients: [
+      { fruit: "과일6", count: 1 }
+    ]
+  },
+  {
+    name: "과일7주스-1개",
+    stages: [3],
+    juiceName: "과일7 주스",
+    ingredients: [
+      { fruit: "과일7", count: 1 }
+    ]
+  },
+  {
+    name: "과일8주스-1개",
+    stages: [3],
+    juiceName: "과일8 주스",
+    ingredients: [
+      { fruit: "과일8", count: 1 }
+    ]
+  },
+
+  // Count 2
+  {
+    name: "과일1주스-2개",
+    stages: [1, 2, 3],
+    juiceName: "과일1 주스 (2개)",
+    ingredients: [
+      { fruit: "과일1", count: 2 }
+    ]
+  },
+  {
+    name: "과일2주스-2개",
+    stages: [1, 2, 3],
+    juiceName: "과일2 주스 (2개)",
+    ingredients: [
+      { fruit: "과일2", count: 2 }
+    ]
+  },
+  {
+    name: "과일3주스-2개",
+    stages: [1, 2, 3],
+    juiceName: "과일3 주스 (2개)",
+    ingredients: [
+      { fruit: "과일3", count: 2 }
+    ]
+  },
+  {
+    name: "과일4주스-2개",
+    stages: [1, 2, 3],
+    juiceName: "과일4 주스 (2개)",
+    ingredients: [
+      { fruit: "과일4", count: 2 }
+    ]
+  },
+  {
+    name: "과일5주스-2개",
+    stages: [2, 3],
+    juiceName: "과일5 주스 (2개)",
+    ingredients: [
+      { fruit: "과일5", count: 2 }
+    ]
+  },
+  {
+    name: "과일6주스-2개",
+    stages: [2, 3],
+    juiceName: "과일6 주스 (2개)",
+    ingredients: [
+      { fruit: "과일6", count: 2 }
+    ]
+  },
+  {
+    name: "과일7주스-2개",
+    stages: [3],
+    juiceName: "과일7 주스 (2개)",
+    ingredients: [
+      { fruit: "과일7", count: 2 }
+    ]
+  },
+  {
+    name: "과일8주스-2개",
+    stages: [3],
+    juiceName: "과일8 주스 (2개)",
+    ingredients: [
+      { fruit: "과일8", count: 2 }
+    ]
+  }
+];
+
+
+
+const guestData = {
+  stage1: {
+    easy: [
+      // 착한손님 2명
+      { type: 'good', recipe: specialRecipes.find(r => r.name === '특수레시피1') },
+      { type: 'good', recipe: specialRecipes.find(r => r.name === '특수레시피2') },
+      // 일반손님 5명
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일1주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일2주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일3주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일4주스-2개') },
+      { type: 'normal', recipe: specialRecipes.find(r => r.name === '특수레시피1') }
+    ],
+    normal: [
+      // 착한손님 1명
+      { type: 'good', recipe: specialRecipes.find(r => r.name === '특수레시피2') },
+      // 일반손님 5명
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일1주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일2주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일3주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일4주스-2개') },
+      { type: 'normal', recipe: specialRecipes.find(r => r.name === '특수레시피1') },
+      // 진상손님 1명
+      { type: 'bad', recipe: specialRecipes.find(r => r.name === '특수레시피1') }
+    ],
+    hard: [
+      // 일반손님 5명
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일1주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일2주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일3주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일4주스-2개') },
+      { type: 'normal', recipe: specialRecipes.find(r => r.name === '특수레시피1') },
+      // 진상손님 2명
+      { type: 'bad', recipe: specialRecipes.find(r => r.name === '특수레시피1') },
+      { type: 'bad', recipe: specialRecipes.find(r => r.name === '특수레시피2') }
+    ]
+  },
+
+  stage2: {
+    easy: [
+      { type: 'good', recipe: specialRecipes.find(r => r.name === '특수레시피3') },
+      { type: 'good', recipe: specialRecipes.find(r => r.name === '특수레시피4') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일1주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일3주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일5주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일6주스-2개') },
+      { type: 'normal', recipe: specialRecipes.find(r => r.name === '특수레시피1') }
+    ],
+    normal: [
+      { type: 'good', recipe: specialRecipes.find(r => r.name === '특수레시피1') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일1주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일3주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일5주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일6주스-2개') },
+      { type: 'normal', recipe: specialRecipes.find(r => r.name === '특수레시피3') },
+      { type: 'bad', recipe: specialRecipes.find(r => r.name === '특수레시피4') }
+    ],
+    hard: [
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일1주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일2주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일3주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일4주스-2개') },
+      { type: 'normal', recipe: specialRecipes.find(r => r.name === '특수레시피1') },
+      { type: 'bad', recipe: specialRecipes.find(r => r.name === '특수레시피4') },
+      { type: 'bad', recipe: specialRecipes.find(r => r.name === '특수레시피3') }
+    ]
+  },
+
+  stage3: {
+    easy: [
+      { type: 'good', recipe: specialRecipes.find(r => r.name === '특수레시피3') },
+      { type: 'good', recipe: specialRecipes.find(r => r.name === '특수레시피4') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일1주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일3주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일5주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일6주스-2개') },
+      { type: 'normal', recipe: specialRecipes.find(r => r.name === '특수레시피2') }
+    ],
+    normal: [
+      { type: 'good', recipe: specialRecipes.find(r => r.name === '특수레시피4') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일1주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일3주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일5주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일6주스-2개') },
+      { type: 'normal', recipe: specialRecipes.find(r => r.name === '특수레시피2') },
+      { type: 'bad', recipe: specialRecipes.find(r => r.name === '특수레시피3') }
+    ],
+    hard: [
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일1주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일2주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일3주스-2개') },
+      { type: 'normal', recipe: normalRecipes.find(r => r.name === '과일4주스-2개') },
+      { type: 'normal', recipe: specialRecipes.find(r => r.name === '특수레시피4') },
+      { type: 'bad', recipe: specialRecipes.find(r => r.name === '특수레시피3') },
+      { type: 'bad', recipe: specialRecipes.find(r => r.name === '특수레시피2') }
+    ]
+  }
+};
+
+
+
+
+function applyGuestBorders(stage, difficulty) {
+  const cards = document.querySelectorAll('.card');
+
+  cards.forEach(card => {
+    card.style.border = '2px solid #ccc';
+    const textDiv = card.querySelector('.card-text');
+    if (textDiv) {
+      textDiv.textContent = '';
+    }
+  });
+
+  const stageKey = `stage${stage.slice(-1)}`;
+  const guestList = guestData[stageKey]?.[difficulty.toLowerCase()];
+
+  if (!guestList) {
+    console.warn(`손님 데이터가 존재하지 않습니다: stage=${stage}, difficulty=${difficulty}`);
+    return;
+  }
+
+  guestList.forEach((guest, index) => {
+    if (index >= cards.length) return;
+    let borderColor = 'blue';
+    let guestLabel = '일반 손님';
+
+    if (guest.type === 'good') {
+      borderColor = 'green';
+      guestLabel = '착한 손님';
+    } else if (guest.type === 'bad') {
+      borderColor = 'red';
+      guestLabel = '진상 손님';
+    }
+
+    cards[index].style.border = `3px solid ${borderColor}`;
+    const textDiv = cards[index].querySelector('.card-text');
+    if (textDiv) {
+      textDiv.textContent = `${guestLabel} (${guest.recipe.juiceName})`;
+    }
+  });
+}
+
+
+
