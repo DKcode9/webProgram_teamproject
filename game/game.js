@@ -328,8 +328,8 @@ const specialRecipes = [
     stages: [1, 2, 3],
     juiceName: "체리 딸기 주스",
     ingredients: [
-      { fruit: "과일1", count: 1 },
-      { fruit: "과일2", count: 1 }
+      { fruit: "체리", count: 1 },
+      { fruit: "딸기", count: 1 }
     ]
   },
   {
@@ -337,8 +337,8 @@ const specialRecipes = [
     stages: [1, 2, 3],
     juiceName: "포도 한라봉 주스",
     ingredients: [
-      { fruit: "과일3", count: 1 },
-      { fruit: "과일4", count: 1 }
+      { fruit: "포도", count: 1 },
+      { fruit: "한라봉", count: 1 }
     ]
   },
   {
@@ -346,8 +346,8 @@ const specialRecipes = [
     stages: [2, 3],
     juiceName: "사과 복숭아 주스",
     ingredients: [
-      { fruit: "과일5", count: 1 },
-      { fruit: "과일6", count: 1 }
+      { fruit: "사과", count: 1 },
+      { fruit: "복숭아", count: 1 }
     ]
   },
   {
@@ -355,8 +355,8 @@ const specialRecipes = [
     stages: [2, 3],
     juiceName: "파인애플 수박 주스",
     ingredients: [
-      { fruit: "과일7", count: 1 },
-      { fruit: "과일8", count: 1 }
+      { fruit: "파인애플", count: 1 },
+      { fruit: "수박", count: 1 }
     ]
   },
   {
@@ -364,14 +364,14 @@ const specialRecipes = [
     stages: [3],
     juiceName: "궁극의 과일 주스",
     ingredients: [
-      { fruit: "과일1", count: 1 },
-      { fruit: "과일2", count: 1 },
-      { fruit: "과일3", count: 1 },
-      { fruit: "과일4", count: 1 },
-      { fruit: "과일5", count: 1 },
-      { fruit: "과일6", count: 1 },
-      { fruit: "과일7", count: 1 },
-      { fruit: "과일8", count: 1 }
+      { fruit: "딸기", count: 1 },
+      { fruit: "체리", count: 1 },
+      { fruit: "포도", count: 1 },
+      { fruit: "한라봉", count: 1 },
+      { fruit: "사과", count: 1 },
+      { fruit: "복숭아", count: 1 },
+      { fruit: "파인애플", count: 1 },
+      { fruit: "수박", count: 1 }
     ]
   }
 ];
@@ -384,65 +384,65 @@ const normalRecipes = [
   {
     name: "과일1주스-1개",
     stages: [1, 2, 3],
-    juiceName: "과일1 주스",
+    juiceName: "체리 주스",
     ingredients: [
-      { fruit: "과일1", count: 1 }
+      { fruit: "체리", count: 1 }
     ]
   },
   {
     name: "과일2주스-1개",
     stages: [1, 2, 3],
-    juiceName: "과일2 주스",
+    juiceName: "딸기 주스",
     ingredients: [
-      { fruit: "과일2", count: 1 }
+      { fruit: "딸기", count: 1 }
     ]
   },
   {
     name: "과일3주스-1개",
     stages: [1, 2, 3],
-    juiceName: "과일3 주스",
+    juiceName: "포도 주스",
     ingredients: [
-      { fruit: "과일3", count: 1 }
+      { fruit: "포도", count: 1 }
     ]
   },
   {
     name: "과일4주스-1개",
     stages: [1, 2, 3],
-    juiceName: "과일4 주스",
+    juiceName: "한라봉 주스",
     ingredients: [
-      { fruit: "과일4", count: 1 }
+      { fruit: "한라봉", count: 1 }
     ]
   },
   {
     name: "과일5주스-1개",
     stages: [2, 3],
-    juiceName: "과일5 주스",
+    juiceName: "사과 주스",
     ingredients: [
-      { fruit: "과일5", count: 1 }
+      { fruit: "사과", count: 1 }
     ]
   },
   {
     name: "과일6주스-1개",
     stages: [2, 3],
-    juiceName: "과일6 주스",
+    juiceName: "복숭아 주스",
     ingredients: [
-      { fruit: "과일6", count: 1 }
+      { fruit: "복숭아", count: 1 }
     ]
   },
   {
     name: "과일7주스-1개",
     stages: [3],
-    juiceName: "과일7 주스",
+    juiceName: "파인애플 주스",
     ingredients: [
-      { fruit: "과일7", count: 1 }
+      { fruit: "파인애플", count: 1 }
     ]
   },
   {
     name: "과일8주스-1개",
     stages: [3],
-    juiceName: "과일8 주스",
+    juiceName: "수박 주스",
     ingredients: [
-      { fruit: "과일8", count: 1 }
+      { fruit: "수박", count: 1 }
     ]
   },
 
@@ -450,65 +450,65 @@ const normalRecipes = [
   {
     name: "과일1주스-2개",
     stages: [1, 2, 3],
-    juiceName: "과일1 주스 (2개)",
+    juiceName: "체리 주스 (2개)",
     ingredients: [
-      { fruit: "과일1", count: 2 }
+      { fruit: "체리", count: 2 }
     ]
   },
   {
     name: "과일2주스-2개",
     stages: [1, 2, 3],
-    juiceName: "과일2 주스 (2개)",
+    juiceName: "딸기 주스 (2개)",
     ingredients: [
-      { fruit: "과일2", count: 2 }
+      { fruit: "딸기", count: 2 }
     ]
   },
   {
     name: "과일3주스-2개",
     stages: [1, 2, 3],
-    juiceName: "과일3 주스 (2개)",
+    juiceName: "포도 주스 (2개)",
     ingredients: [
-      { fruit: "과일3", count: 2 }
+      { fruit: "포도", count: 2 }
     ]
   },
   {
     name: "과일4주스-2개",
     stages: [1, 2, 3],
-    juiceName: "과일4 주스 (2개)",
+    juiceName: "한라봉 주스 (2개)",
     ingredients: [
-      { fruit: "과일4", count: 2 }
+      { fruit: "한라봉", count: 2 }
     ]
   },
   {
     name: "과일5주스-2개",
     stages: [2, 3],
-    juiceName: "과일5 주스 (2개)",
+    juiceName: "사과 주스 (2개)",
     ingredients: [
-      { fruit: "과일5", count: 2 }
+      { fruit: "사과", count: 2 }
     ]
   },
   {
     name: "과일6주스-2개",
     stages: [2, 3],
-    juiceName: "과일6 주스 (2개)",
+    juiceName: "복숭아 주스 (2개)",
     ingredients: [
-      { fruit: "과일6", count: 2 }
+      { fruit: "복숭아", count: 2 }
     ]
   },
   {
     name: "과일7주스-2개",
     stages: [3],
-    juiceName: "과일7 주스 (2개)",
+    juiceName: "파인애플 주스 (2개)",
     ingredients: [
-      { fruit: "과일7", count: 2 }
+      { fruit: "파인애플", count: 2 }
     ]
   },
   {
     name: "과일8주스-2개",
     stages: [3],
-    juiceName: "과일8 주스 (2개)",
+    juiceName: "수박 주스 (2개)",
     ingredients: [
-      { fruit: "과일8", count: 2 }
+      { fruit: "수박", count: 2 }
     ]
   }
 ];
@@ -619,6 +619,8 @@ const guestData = {
 
 function applyGuestBorders(stage, difficulty) {
   const cards = document.querySelectorAll('.card');
+  const recipeContainer = document.querySelector('.recipe');
+  recipeContainer.innerHTML = ''; // 기존 레시피 초기화
 
   cards.forEach(card => {
     card.style.border = '2px solid #ccc';
@@ -654,7 +656,57 @@ function applyGuestBorders(stage, difficulty) {
     if (textDiv) {
       textDiv.textContent = `${guestLabel} (${guest.recipe.juiceName})`;
     }
+
+    // 주문 정보 HTML 생성
+    const recipeDiv = document.createElement('div');
+    recipeDiv.classList.add('recipe');
+
+    const headerDiv = document.createElement('div');
+    headerDiv.classList.add('recipe-header');
+
+    // 이미지 (alt는 juiceName)
+    const recipeImg = document.createElement('img');
+    recipeImg.classList.add('recipe-image');
+    // 이미지 경로 예시: designs/recipe1.png (특수레시피1 → recipe1)
+    const recipeIndex = getRecipeImageIndex(guest.recipe.name);
+    recipeImg.src = `designs/recipe${recipeIndex}.png`;
+    recipeImg.alt = guest.recipe.juiceName;
+
+    const infoDiv = document.createElement('div');
+
+    const recipeNameDiv = document.createElement('div');
+    recipeNameDiv.classList.add('recipe-name');
+    recipeNameDiv.textContent = guest.recipe.juiceName;
+
+    const ingredientList = document.createElement('ul');
+    ingredientList.classList.add('ingredient-list');
+
+    guest.recipe.ingredients.forEach(ing => {
+      const li = document.createElement('li');
+      li.textContent = `${ing.fruit} X ${ing.count}`;
+      ingredientList.appendChild(li);
+    });
+
+    infoDiv.appendChild(recipeNameDiv);
+    infoDiv.appendChild(ingredientList);
+
+    headerDiv.appendChild(recipeImg);
+    headerDiv.appendChild(infoDiv);
+
+    recipeDiv.appendChild(headerDiv);
+
+    recipeContainer.appendChild(recipeDiv);
   });
+}
+
+/**
+ * 레시피 이름에서 recipeX 이미지 번호 추출
+ * 예: 특수레시피1 → 1
+ */
+function getRecipeImageIndex(recipeName) {
+  // 예: "특수레시피1", "과일1주스-2개" 등
+  const match = recipeName.match(/\d+/);
+  return match ? match[0] : 'default';
 }
 
 
