@@ -616,7 +616,6 @@ const guestData = {
 
 
 
-
 function applyGuestBorders(stage, difficulty) {
   const cards = document.querySelectorAll('.card');
   const recipeContainer = document.querySelector('.recipe');
@@ -664,12 +663,23 @@ function applyGuestBorders(stage, difficulty) {
     const headerDiv = document.createElement('div');
     headerDiv.classList.add('recipe-header');
 
-    // 이미지 (alt는 juiceName)
+    // 이미지 처리
     const recipeImg = document.createElement('img');
     recipeImg.classList.add('recipe-image');
-    // 이미지 경로 예시: designs/recipe1.png (특수레시피1 → recipe1)
-    const recipeIndex = getRecipeImageIndex(guest.recipe.name);
-    recipeImg.src = `designs/recipe${recipeIndex}.png`;
+
+    // 이미지 구분
+    let imgSrc = '';
+    if (guest.recipe.name.startsWith('특수레시피')) {
+      // 특수 레시피: designs/recipeX.png
+      const recipeIndex = getRecipeImageIndex(guest.recipe.name);
+      imgSrc = `designs/recipe${recipeIndex}.png`;
+    } else {
+      // 일반 레시피: designs/fruitX.png
+      const fruitNumber = extractFruitNumber(guest.recipe.name);
+      imgSrc = `designs/fruit${fruitNumber}.png`;
+    }
+
+    recipeImg.src = imgSrc;
     recipeImg.alt = guest.recipe.juiceName;
 
     const infoDiv = document.createElement('div');
@@ -698,6 +708,14 @@ function applyGuestBorders(stage, difficulty) {
     recipeContainer.appendChild(recipeDiv);
   });
 }
+
+// 🔥 추가 유틸 함수
+function extractFruitNumber(recipeName) {
+  // 예: "과일1주스-1개" → 1
+  const match = recipeName.match(/과일(\d+)/);
+  return match ? match[1] : '1'; // 기본 1
+}
+
 
 /**
  * 레시피 이름에서 recipeX 이미지 번호 추출
