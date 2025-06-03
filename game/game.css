@@ -409,7 +409,7 @@ body {
     color: #333;
 }
 
-#game-over {
+#game-over, #game-clear {
   position: absolute;
   top: 0;
   left: 0;

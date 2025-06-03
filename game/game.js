@@ -138,6 +138,10 @@ function initializeCanvas() {
             difficultyLabel = 'HARD';
             break;
     }
+
+    const gameOverDiv = document.getElementById('game-over');
+    gameOverDiv.style.display = 'none';
+  
       
       
     // 게임 세팅
@@ -1591,6 +1595,8 @@ function gameCollapse(){
   hitball_size = 10;
   cutAnimationSequence();
 }
+
+
 function restartGame(){
   gameCollapse();
   gameOver = false;
