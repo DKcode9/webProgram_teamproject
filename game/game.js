@@ -782,23 +782,73 @@ function getRecipeImageIndex(recipeName) {
         setpaddlescale(sz) : sz 만큼 paddle 크기를 정한다. (return : 기존 paddle 크기)
 */
 
+
+
+// 과일명 → 인덱스 매핑 (ballCnt 배열용)
+const fruitIndexMap = {
+  '체리': 0,
+  '딸기': 1,
+  '포도': 2,
+  '한라봉': 3,
+  '사과': 4,
+  '복숭아': 5,
+  '파인애플': 6,
+  '수박': 7
+};
+
+function calculateFruitCounts(stage, difficulty) {
+  const stageKey = `stage${stage}`;
+  const guestList = guestData[stageKey]?.[difficulty];
+  
+  // 초기화
+  const fruitCounts = Array(8).fill(0);
+  
+  if (!guestList) {
+    console.warn(`손님 데이터가 없습니다: stage=${stage}, difficulty=${difficulty}`);
+    return fruitCounts;
+  }
+
+  guestList.forEach(guest => {
+    guest.recipe.ingredients.forEach(ingredient => {
+      const idx = fruitIndexMap[ingredient.fruit];
+      if (idx !== undefined) {
+        fruitCounts[idx] += ingredient.count;
+      }
+    });
+  });
+
+  return fruitCounts;
+}
+
+// 사용 예시
+// 스테이지 및 난이도 별 과일 갯수 설정
+
+const ballCnt_easy = [
+  calculateFruitCounts(1, 'easy'),
+  calculateFruitCounts(2, 'easy'),
+  calculateFruitCounts(3, 'easy')
+];
+
+const ballCnt_normal = [
+  calculateFruitCounts(1, 'normal'),
+  calculateFruitCounts(2, 'normal'),
+  calculateFruitCounts(3, 'normal')
+];
+
+const ballCnt_hard = [
+  calculateFruitCounts(1, 'hard'),
+  calculateFruitCounts(2, 'hard'),
+  calculateFruitCounts(3, 'hard')
+];
+
+
+
+
+
+
 // 수정 가능 변수
 let hitBallColor = null; // null 이면 black 으로 설정 (hitball)
-let ballCnt_easy = [ // 스테이지 및 난이도 별 과일 갯수 설정
-    [0,0,1,0,3,0,0,0], //1스테이지
-    [0,3,0,1,0,0,0,0], //2스테이지
-    [0,0,2,0,1,0,0,0], //3스테이지
-];
-let ballCnt_normal = [
-    [0,1,0,3,0,0,0,0], //1스테이지
-    [1,0,0,0,3,0,0,0], //2스테이지
-    [0,0,1,0,0,0,0,0], //3스테이지
-];
-let ballCnt_hard = [
-    [1,0,3,0,0,0,0,1], //1스테이지
-    [0,1,0,3,0,0,0,1], //2스테이지
-    [0,0,0,1,0,3,0,1], //3스테이지
-];
+
 let tbreakCount = [1,2,3,4,5,6,7,8] // tarBall breakCount
 
 // hitBall 의 크기를 임의로 조절한다.
@@ -836,21 +886,6 @@ function setpaddlescale(sz) {
     }
     return retV;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1484,6 +1519,65 @@ function clamp(v, min, max){
   return Math.min(max,Math.max(min,v));
 }
 
+
+
+
+// ===================== 게임 멈추기/일시정지 처리 =====================
+
+// ESC 키 누르면 게임 멈추기
+// 전역 변수로 일시정지 상태 관리
+let isPaused = false;
+
+// ESC 키 누를 때마다 pause ↔ resume 토글
+document.addEventListener('keydown', event => {
+  if (event.key === "Escape") {
+    if (isPaused) {
+      resumeGame();
+    } else {
+      pauseGame();
+    }
+    isPaused = !isPaused;
+  }
+});
+
+function pauseGame() {
+  // 애니메이션 중단
+  gameOver = true;
+  cutAnimationSequence();
+
+  // 남아 있는 hitBall 생성 타이머들 모두 정리
+  for (let t of hitballtimer) {
+    clearTimeout(t);
+  }
+  hitballtimer = [];
+
+  // 배경음악도 일시정지
+  const bgm = document.getElementById('main-bgm');
+  if (bgm && !bgm.paused) {
+    bgm.pause();
+  }
+
+  console.log("게임이 일시정지되었습니다.");
+}
+
+function resumeGame() {
+  // 애니메이션 재시작
+  gameOver = false;
+
+  // 배경음악 다시 재생
+  const bgm = document.getElementById('main-bgm');
+  if (bgm && bgm.paused) {
+    bgm.play();
+  }
+
+  // 단순히 animate()를 다시 호출해서 루프를 재개
+  // (게임 상태는 pause 직전 그대로 유지됩니다)
+  animate();
+
+  console.log("게임이 재개되었습니다.");
+}
+
+
 function cutAnimationSequence(){
   if (aniHandle != null) {
     cancelAnimationFrame(aniHandle);
@@ -1549,3 +1643,8 @@ document.addEventListener('keyup', handle => {
 
 
 //--------------------------------//[ENDLINE] Ball//--------------------------------//
+
+
+
+
+
