@@ -1464,6 +1464,12 @@ function animate() {
     paddle.update();
     paddle.draw();
   }
+  // 게임 오버 처리 
+  if (balls.length === 0) {
+    endGame();
+    return;  
+  }
+
   aniHandle = requestAnimationFrame(animate);
 }
 function updateAllhitBalls(){
@@ -1486,7 +1492,24 @@ function clamp(v, min, max){
 }
 
 
+function endGame() {
+  gameOver = true;
+  cutAnimationSequence();  // 애니메이션 중단
 
+  // hitBallTimer도 멈춤
+  for (let t of hitballtimer) {
+    clearTimeout(t);
+  }
+  hitballtimer = [];
+
+  // #game-over 표시
+  const gameOverDiv = document.getElementById('game-over');
+  if (gameOverDiv) {
+    gameOverDiv.style.display = 'flex';
+  }
+
+  console.log("게임 오버! 모든 tarBall이 제거되었습니다.");
+}
 
 // ===================== 게임 멈추기/일시정지 처리 =====================
 
