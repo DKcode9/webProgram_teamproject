@@ -87,7 +87,8 @@ function proceedToGame() {
     startGameInterval();
 }
 
-
+let canvas;
+let ctx;
 
 let fruits = [];  
 let fruitImages = [];  
@@ -95,8 +96,8 @@ let fruitImages = [];
 function initializeCanvas() {
     fruits = [];  // 초기화
     fruitImages = [];  // 초기화
-    const canvas = document.getElementById('game-canvas');
-    const ctx = canvas.getContext('2d');
+    canvas = document.getElementById('game-canvas');
+    ctx = canvas.getContext('2d');
     canvas.addEventListener("click", handleClick);
     
 
@@ -150,124 +151,52 @@ function initializeCanvas() {
 
     // 기본 과일과 공 정의
     
-    class Ball {
+    canvas.addEventListener("click", handleCanvasClick);
 
-    }
-
-    class Fruit {
-        constructor(x, y, size, img) {
-            this.x = x;
-            this.y = y;
-            this.size = size;
-            this.img = img;
-        }
-    }
-
-    // 🍎 이미지 랜덤 배치
-    const fruitCount = 8;
-    const fruitSizes = [];
-
-    for (let i = 0; i < fruitCount; i++) {
-        fruitSizes.push(30 + i * 10);
-    }
-
-    for (let i = 1; i <= fruitCount; i++) {
-        const img = new Image();
-        img.src = `designs/fruit${i}.png`;
-        fruitImages.push(img);
-    }
-
-    Promise.all(fruitImages.map(img => {
-        return new Promise(resolve => {
-            img.onload = resolve;
-        });
-    })).then(() => {
-        for (let i = 0; i < fruitCount; i++) {
-            const size = fruitSizes[i];
-            let x, y;
-            let attempts = 0;
-            let overlap = false;
-
-            do {
-                overlap = false;
-                x = Math.random() * (canvas.width - size);
-                y = Math.random() * (canvas.height - size);
-
-                for (let j = 0; j < fruits.length; j++) {
-                    const other = fruits[j];
-                    const dx = (x + size / 2) - (other.x + other.size / 2);
-                    const dy = (y + size / 2) - (other.y + other.size / 2);
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    const minDistance = (size / 2) + (other.size / 2);
-
-                    if (distance < minDistance) {
-                        overlap = true;
-                        break;
-                    }
-                }
-
-                attempts++;
-                // 무한 루프 방지: 100회 시도 후 강제로 배치
-                if (attempts > 100) {
-                    console.warn("과일 배치 충돌 해결 실패 (강제 배치)");
-                    break;
-                }
-            } while (overlap);
-
-            fruits.push(new Fruit(x, y, size, fruitImages[i]));
-        }
-
-        drawFruits();
-    });
-
-    function drawFruits() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        fruits.forEach(fruit => {
-            ctx.drawImage(fruit.img, fruit.x, fruit.y, fruit.size, fruit.size);
-        });
-    }
-
-    function handleClick(event) {
-        const rect = canvas.getBoundingClientRect();
-        const clickX = event.clientX - rect.left;
-        const clickY = event.clientY - rect.top;
-
-        let clickedFruit = null;
-        for (let i = 0; i < fruits.length; i++) {
-            const fruit = fruits[i];
-            if (
-                clickX >= fruit.x &&
-                clickX <= fruit.x + fruit.size &&
-                clickY >= fruit.y &&
-                clickY <= fruit.y + fruit.size
-            ) {
-                clickedFruit = fruit;
-                fruits.splice(i, 1);  // 과일 삭제
-                break;
-            }
-        }
-
-        if (clickedFruit) {
-            // 카운터 증가
-            const fruitIndex = fruitImages.indexOf(clickedFruit.img) + 1;
-            const counter = document.getElementById(`f${fruitIndex}`);
-            if (counter) {
-                const currentCount = parseInt(counter.textContent) || 0;
-                counter.textContent = currentCount + 1;
-            }
-        }
-
-        // 과일이 하나라도 사라졌을 때만 다시 그리기
-        drawFruits();
-    }
 }
 
 
+// drawFruits
+function drawFruits() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    fruits.forEach(fruit => {
+        ctx.drawImage(fruit.img, fruit.x, fruit.y, fruit.size, fruit.size);
+    });
+}
 
 
+// handleClick
+function handleClick(event) {
+    const rect = canvas.getBoundingClientRect();
+    const clickX = event.clientX - rect.left;
+    const clickY = event.clientY - rect.top;
 
+    let clickedFruit = null;
+    for (let i = 0; i < fruits.length; i++) {
+        const fruit = fruits[i];
+        if (
+            clickX >= fruit.x &&
+            clickX <= fruit.x + fruit.size &&
+            clickY >= fruit.y &&
+            clickY <= fruit.y + fruit.size
+        ) {
+            clickedFruit = fruit;
+            fruits.splice(i, 1);  // 과일 삭제
+            break;
+        }
+    }
 
+    if (clickedFruit) {
+        const fruitIndex = fruitImages.indexOf(clickedFruit.img) + 1;
+        const counter = document.getElementById(`f${fruitIndex}`);
+        if (counter) {
+            const currentCount = parseInt(counter.textContent) || 0;
+            counter.textContent = currentCount + 1;
+        }
+    }
 
+    drawFruits();
+}
 
 
 /**
@@ -925,7 +854,7 @@ let gameOver = false;
 
 let hitballtimer = []; // 2초 뒤에 hitball 등장~
 let aniHandle = null; // animation sequence 를 중간에 중단시키기 위한 전역변수.
-let canvas, ctx;
+// let canvas, ctx; // 위에 선언되어 있습니다
 
 // 페이지 로드가 완료되면 DOM 트리에서 canvas를 찾기!
 $(document).ready(function() {
@@ -1279,46 +1208,83 @@ class hitBall {
 
 
 function hitBall_handleCollisions(){
-  if(hitballs.length <= 0 || balls.length <= 0 ||gameOver) return;
+  if(hitballs.length <= 0 || balls.length <= 0 || gameOver) return;
   
-  for (let ball of balls) {
-    for (let hitball of hitballs) {    
-      const b = ball;
+  for (let i = 0; i < balls.length; i++) {
+    const b = balls[i];
+    for (let hitball of hitballs) {
       const dx = hitball.x - b.x;
       const dy = hitball.y - b.y;
-      const dist = Math.hypot(dx,dy);
+      const dist = Math.hypot(dx, dy);
 
-      if (dist < hitball.radius + b.radius){ // hitball 과 tarball 간 충돌
-        const angle = Math.atan2(dy,dx); // 아까 tarball 간 충돌과 비슷함. arctan 로 각도 구하고 단위 벡터 * 길이 곱해서 더하기!
-          
-          // 속도 크기는 5로 고정
+      if (dist < hitball.radius + b.radius) { 
+        const angle = Math.atan2(dy, dx);
+
         hitball.vx = Math.cos(angle) * hitball_speed;
         hitball.vy = Math.sin(angle) * hitball_speed;
 
-          // 파고든 만큼 다시 분리(보정)
         const pushDist = hitball.radius + b.radius - dist + 1;
         hitball.x += Math.cos(angle) * pushDist;
         hitball.y += Math.sin(angle) * pushDist;
-          
-          // tarball 과의 충돌 처리
-          // b.vx = b.vx * -bounce_byhit + Math.cos(angle) * strength_byhit; // x 방향
-          // b.vy = b.vy * -bounce_byhit + Math.sin(angle) * strength_byhit; // y방향 
 
-
-          // 과일 박살~!
-
-        
-        if (b.breakCount <= 1){
-          balls.splice(ball, 1); // i-th ball 을 1개 제거
+        if (b.breakCount <= 1) {
+          // 바구니 카운터 증가
+          const fruitIndex = b.ident + 1;
+          const counterElement = document.getElementById(`f${fruitIndex}`);
+          if (counterElement) {
+            const currentCount = parseInt(counterElement.textContent) || 0;
+            counterElement.textContent = currentCount + 1;
+          }
+          balls.splice(i, 1);
+          i--; // 인덱스 보정
         } else {
-          b.breakCount -= 1;      
+          b.breakCount -= 1;
         }
-
       }
     }
-
   }
 }
+
+
+function handleCanvasClick(event) {
+    if (gameOver) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const clickX = event.clientX - rect.left;
+    const clickY = event.clientY - rect.top;
+
+    // balls 배열 순회하며 클릭한 tarBall이 있는지 확인
+    for (let i = 0; i < balls.length; i++) {
+        const ball = balls[i];
+        const dx = clickX - ball.x;
+        const dy = clickY - ball.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance <= ball.radius) {
+            // breakCount 감소
+            if (ball.breakCount > 1) {
+                ball.breakCount -= 1;
+            } else {
+                // breakCount가 0이하라면 공 삭제
+                // → 바구니 카운터 증가
+                const fruitIndex = ball.ident + 1; // ident는 0-based
+                const counterElement = document.getElementById(`f${fruitIndex}`);
+                if (counterElement) {
+                    const currentCount = parseInt(counterElement.textContent) || 0;
+                    counterElement.textContent = currentCount + 1;
+                }
+
+                balls.splice(i, 1);
+                i--; // 배열에서 제거했으니 인덱스 보정
+            }
+
+            // 클릭한 공만 처리하고 break
+            break;
+        }
+    }
+}
+
+
 
 class Paddle {
   constructor(){
@@ -1463,7 +1429,7 @@ function initBalls() { // tarBall & hitBall
   hitballtimer.push(setTimeout( function() {
   if(!gameOver){
     hitballs.push(new hitBall());
-  }} ,20));
+  }} ,2000));
 
 }
 function animate() {
@@ -1637,7 +1603,7 @@ document.addEventListener('keyup', handle => {
   if (handle.key === 'b') setSizehitBall(10); // 원상복구
   if (handle.key === 'a') addhitBall();  // hitBall 추가하기
   if (handle.key === 'd') setSpeedhitBall(15);
-  if (handle.key === 'e') setpaddlescale(15);
+  if (handle.key === 'e') setpaddlescale(400);
 });
 
 
