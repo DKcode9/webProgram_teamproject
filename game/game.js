@@ -3,6 +3,9 @@ let currentDifficulty = '';
 //스테이지 전역 변수로 저장
 let currentStage = '';
 
+// 점수판판
+let currentScore = 0;
+
 $(document).ready(function() {
     // 페이지가 로드되면 메인 화면 표시
     showMainScreen();
@@ -595,7 +598,8 @@ function applyGuestBorders(stage, difficulty) {
     cards[index].style.border = `3px solid ${borderColor}`;
     const textDiv = cards[index].querySelector('.card-text');
     if (textDiv) {
-      textDiv.textContent = `${guestLabel} (${guest.recipe.juiceName})`;
+      // textDiv.textContent = `${guestLabel} <br> ${guest.recipe.juiceName}`;
+      textDiv.innerHTML = `${guestLabel} <br> ${guest.recipe.juiceName}`;
     }
 
     // 주문 정보 HTML 생성
@@ -651,7 +655,7 @@ function applyGuestBorders(stage, difficulty) {
   });
 }
 
-// 🔥 추가 유틸 함수
+// 추가 유틸 함수
 function extractFruitNumber(recipeName) {
   // 예: "과일1주스-1개" → 1
   const match = recipeName.match(/과일(\d+)/);
@@ -731,6 +735,37 @@ const fruitIndexMap = {
   '파인애플': 6,
   '수박': 7
 };
+
+const fruitScoreMap = {
+  '체리': 50,
+  '딸기': 100,
+  '포도': 150,
+  '한라봉': 200,
+  '사과': 250,
+  '복숭아': 300,
+  '파인애플': 350,
+  '수박': 400
+};
+
+function addScore(fruitName) {
+  const scoreToAdd = fruitScoreMap[fruitName] || 0;
+  currentScore += scoreToAdd;
+
+  const scoreDiv = document.getElementById('current-score');
+  if (scoreDiv) {
+    scoreDiv.textContent = `Score: ${currentScore}`;
+  }
+}
+
+function getFruitNameByIdent(ident) {
+  for (const [name, index] of Object.entries(fruitIndexMap)) {
+    if (index === ident) {
+      return name;
+    }
+  }
+  return '';
+}
+
 
 function calculateFruitCounts(stage, difficulty) {
   const stageKey = `stage${stage}`;
@@ -1246,6 +1281,9 @@ function hitBall_handleCollisions(){
         hitball.y += Math.sin(angle) * pushDist;
 
         if (b.breakCount <= 1) {
+          // 점수 추가
+          addScore(getFruitNameByIdent(b.ident));
+
           // 바구니 카운터 증가
           const fruitIndex = b.ident + 1;
           const counterElement = document.getElementById(`f${fruitIndex}`);
@@ -1283,6 +1321,9 @@ function handleCanvasClick(event) {
             if (ball.breakCount > 1) {
                 ball.breakCount -= 1;
             } else {
+                // 점수 추가
+                addScore(getFruitNameByIdent(ball.ident));
+
                 // breakCount가 0이하라면 공 삭제
                 // → 바구니 카운터 증가
                 const fruitIndex = ball.ident + 1; // ident는 0-based

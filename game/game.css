@@ -288,7 +288,7 @@ body {
     border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
-#stage-panal {
+#stage-panel {
     flex: 0 0 10%;          /* 높이 고정 */
     height: auto;
     width: 100%;
@@ -303,10 +303,28 @@ body {
     overflow: hidden;
 }
 
+#stage-div {
+  display: flex;           
+  flex-direction: row;     /* 좌우 배치 */
+  width: 100%;             /* 부모 폭 채우기 */
+  justify-content: space-around;  /* 또는 space-between/center 등 */
+  gap: 5px;                /* 원하는 간격 */
+}
+
 #current-stage,
 #current-difficulty {
-    width: 100%; /* 부모 폭 채우기 */
+    width: 50%; /* 부모 폭 채우기 */
     /* box-sizing: border-box; padding, border 포함 */
+    font-size: 16px;
+    font-weight: bold;
+    background: transparent;
+    border-radius: 10px;
+    padding: 4px 8px;
+    /* border: 2px solid rgba(255, 255, 255, 0.3); ／／ rgba(135, 206, 235, 0.8); */
+    text-align: center;
+}
+
+#current-score {
     font-size: 16px;
     font-weight: bold;
     background: transparent;
