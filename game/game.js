@@ -1369,26 +1369,76 @@ class hitBall {
 
       // ( 너무 빠른 공은 dist = 0 으로 바뀌며 dividedByZero 버그 발생!)
       if (dist < this.radius) { // 충돌!
-        if (dist <= 0) {
+        const isVertexL = 
+          (this.y + this.radius >= paddle.y )&&
+          (this.y < paddle.y) &&
+          (this.x + this.radius > paddle.x) &&
+          (this.x < paddle.x);
+        const isVertexR = 
+          (this.y + this.radius >= paddle.y )&&
+          (this.y < paddle.y) &&
+          (this.x - this.radius < paddle.x + paddle.width) &&
+          (this.x > paddle.x + paddle.width);
+
+        if (!(isVertexL||isVertexR)) {
             this.vy *= -1;
             this.y = paddle.y - this.radius - 1;
         } else {
+          const leftp = (closestX === paddle.x) && (closestY === paddle.y);
+          const rightp = (closestX === paddle.x + paddle.width) && (closestY === paddle.y);
         
-        // 단위 벡터 구하기... 인데 아까 원이랑 비슷함
-        // 예를들어 x 방향으로 관통하는 상황에선 x가 음수가 나올테니(물론 좌표 기준으로 생각하면 양수가 되겠지만) 나중에 그냥 + 로 더하면 될듯?
-          const nx = dx / dist; // 걍 cos 값임
-          const ny = dy / dist; // 걍 sin 값임
+          if (leftp || rightp){
+
+            const oldSpeed = Math.hypot(this.vx, this.vy) || hitball_speed;
+            
+
+            const cornerX = leftp ? paddle.x : (paddle.x + paddle.width);
+            const cornerY = paddle.y;
+            // 공~꼭짓점 까지의 각도 구하기
+            const vx_center = this.x - cornerX;
+            const vy_center = this.y - cornerY;
+            const angle_center = Math.atan2(vy_center, vx_center);
+
+            // 기존 꼭짓점의 45도 vector
+            const angle_45 = leftp ? ( - Math.PI + Math.PI / 4 )  // -135도= -3ㅠ/4
+              : ( - Math.PI / 4 ); // -45도 = -ㅠ/4
+
+            // 이제 두 개의 각도를 구했고, 그 두 사이의 각이 반사각이 된다.
+            let a = angle_center;
+            let b = angle_45;
+
+            let diff = b-a;
+            if (diff > Math.PI) diff -= 2 * Math.PI; // 각 차이를 180도 내로 정규화
+            if (diff < -Math.PI) diff += 2 * Math.PI;
+
+            // 중요: 중간 각도 구하기!
+            const midAngle = a + diff / 2;
+            // 공 반사!
+            this.vx = Math.cos(midAngle) * oldSpeed;
+            this.vy = Math.sin(midAngle) * oldSpeed;
+            // 파고든만큼 밀어내고 +1 만큼 더 밀어내기
+            const overlap = this.radius - dist + 1;
+            this.x += Math.cos(midAngle) * overlap;
+            this.y += Math.sin(midAngle) * overlap;
+ 
+          } else {
+
+            // 단위 벡터 구하기... 인데 아까 원이랑 비슷함
+            // 예를들어 x 방향으로 관통하는 상황에선 x가 음수가 나올테니(물론 좌표 기준으로 생각하면 양수가 되겠지만) 나중에 그냥 + 로 더하면 될듯?
+            const nx = dx / dist; // 걍 cos 값임
+            const ny = dy / dist; // 걍 sin 값임
 
         
-          const dot = this.vx*nx + this.vy*ny;
+            const dot = this.vx*nx + this.vy*ny;
 
-          this.vx = this.vx - 2 * dot * nx; // 반영된 vx
-          this.vy = this.vy - 2 * dot * ny; // 반영된 vy
+            this.vx = this.vx - 2 * dot * nx; // 반영된 vx
+            this.vy = this.vy - 2 * dot * ny; // 반영된 vy
 
-        // paddle 에 파고든 만큼 다시 분리
-          const pushDist = this.radius - dist + 1;
-          this.x += nx * pushDist; // 단위벡터 * 길이 반영
-          this.y += ny * pushDist; // 단위벡터 * 길이 반영
+            // paddle 에 파고든 만큼 다시 분리
+            const pushDist = this.radius - dist + 1;
+            this.x += nx * pushDist; // 단위벡터 * 길이 반영
+            this.y += ny * pushDist; // 단위벡터 * 길이 반영
+          }
         }
       }
     }
