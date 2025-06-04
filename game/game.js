@@ -562,43 +562,72 @@ const guestData = {
 
 
 function applyGuestBorders(stage, difficulty) {
-  const cards = document.querySelectorAll('.card');
+  const cardContainer = document.querySelector('.card-container');
+  cardContainer.innerHTML = ''; // 기존 카드 모두 제거
+
   const recipeContainer = document.querySelector('.recipe');
   recipeContainer.innerHTML = ''; // 기존 레시피 초기화
-
-  cards.forEach(card => {
-    card.style.border = '2px solid #ccc';
-    card.style.backgroundColor = '';
-    card.removeAttribute('data-recipe-name');
-    const textDiv = card.querySelector('.card-text');
-    if (textDiv) textDiv.textContent = '';
-  });
 
   const stageKey = `stage${stage.slice(-1)}`;
   const guestList = guestData[stageKey]?.[difficulty.toLowerCase()];
   if (!guestList) return;
 
   guestList.forEach((guest, index) => {
-    if (index >= cards.length) return;
-    let borderColor = 'blue';
+    // 카드 요소 생성
+    const card = document.createElement('div');
+    card.classList.add('card');
+
+    // 카드 이미지
+    const cardImage = document.createElement('div');
+    cardImage.classList.add('card-image');
+    card.appendChild(cardImage);
+
+    // 카드 텍스트
+    const cardText = document.createElement('div');
+    cardText.classList.add('card-text');
     let guestLabel = '일반 손님';
+    let borderColor = 'blue';
+
     if (guest.type === 'good') {
-      borderColor = 'green'; guestLabel = '착한 손님';
+      borderColor = 'green';
+      guestLabel = '착한 손님';
     } else if (guest.type === 'bad') {
-      borderColor = 'red'; guestLabel = '진상 손님';
+      borderColor = 'red';
+      guestLabel = '진상 손님';
     }
 
-    const card = cards[index];
     card.style.border = `3px solid ${borderColor}`;
-    // 레시피 이름을 data 속성으로 저장
     card.dataset.recipeName = guest.recipe.name;
+    cardText.innerHTML = `${guestLabel} <br> ${guest.recipe.juiceName}`;
+    card.appendChild(cardText);
 
-    const textDiv = card.querySelector('.card-text');
-    if (textDiv) {
-      textDiv.innerHTML = `${guestLabel} <br> ${guest.recipe.juiceName}`;
-    }
+    // 클릭 이벤트
+    card.onclick = () => {
+      if (card.style.backgroundColor !== 'yellow') return;
 
-    // (이하 레시피 이미지·텍스트 생성 로직은 기존과 동일)
+      const recipeName = card.dataset.recipeName;
+      if (!recipeName) return;
+      const recipe = [...specialRecipes, ...normalRecipes].find(r => r.name === recipeName);
+      if (!recipe) return;
+
+      recipe.ingredients.forEach(ing => {
+        const idx = fruitIndexMap[ing.fruit];
+        if (idx == null) return;
+        const counterEl = document.getElementById(`f${idx+1}`);
+        if (!counterEl) return;
+        const haveCount = parseInt(counterEl.textContent, 10) || 0;
+        counterEl.textContent = Math.max(0, haveCount - ing.count);
+      });
+
+      card.remove();
+      checkRecipes();
+    };
+
+    cardContainer.appendChild(card);
+  });
+
+  // 레시피 출력
+  guestList.forEach(guest => {
     const recipeDiv = document.createElement('div');
     recipeDiv.classList.add('recipe');
     const headerDiv = document.createElement('div');
@@ -638,48 +667,10 @@ function applyGuestBorders(stage, difficulty) {
     recipeContainer.appendChild(recipeDiv);
   });
 
-  // 레시피 카드 배경 한 번 그려두기
+  // 카드 배경 초기화
   checkRecipes();
-
-  // 클릭 시 "레시피 조건이 충족"되어 있으면 과일 소모 후 카드 삭제
-  const allRecipes = {};
-  specialRecipes.concat(normalRecipes).forEach(r => {
-    allRecipes[r.name] = r;
-  });
-
-  document.querySelectorAll('.card').forEach(card => {
-    card.onclick = () => {
-      // 1) 현재 카드가 '조건 만족' 상태인지 (backgroundColor === 'yellow')
-      if (card.style.backgroundColor !== 'yellow') {
-        // 조건 만족되지 않으면 클릭 무시
-        return;
-      }
-
-      // 2) 레시피 이름 → 객체 조회
-      const recipeName = card.dataset.recipeName;
-      if (!recipeName) return;
-      const recipe = allRecipes[recipeName];
-      if (!recipe) return;
-
-      // 3) 바구니(#f1~#f8)에서 재료만큼 차감
-      recipe.ingredients.forEach(ing => {
-        const idx = fruitIndexMap[ing.fruit]; // 0~7
-        if (idx == null) return;
-        const counterEl = document.getElementById(`f${idx+1}`);
-        if (!counterEl) return;
-        const haveCount = parseInt(counterEl.textContent, 10) || 0;
-        const remain = Math.max(0, haveCount - ing.count);
-        counterEl.textContent = remain;
-      });
-
-      // 4) 카드를 아예 삭제
-      card.remove();
-
-      // 5) 삭제 후 나머지 카드들 다시 검사하여 배경 갱신
-      checkRecipes();
-    };
-  });
 }
+
 
 
 // 추가 유틸 함수
@@ -1599,8 +1590,9 @@ function animate() {
     paddle.draw();
   }
   // 게임 오버 처리 
-  if (document.querySelectorAll('.card').length === 0 && !gameOver) {
+  if (document.querySelectorAll('.card').length === 0) {
   gameOver = true;
+  gameCollapse();
   clearGame();
   return;
 }
@@ -1656,14 +1648,24 @@ function clearGame() {
   }
   hitballtimer = [];
 
-  // #game-over 표시
-  const gameOverDiv = document.getElementById('game-clear');
-  if (gameOverDiv) {
-    gameOverDiv.style.display = 'flex';
+  // "클리어" 메시지 표시
+  const gameClearDiv = document.getElementById('game-clear');
+  if (gameClearDiv) {
+    gameClearDiv.style.display = 'flex';
   }
 
-  console.log("게임 오버! 모든 tarBall이 제거되었습니다.");
+  // 카드 초기화 
+  const cards = document.querySelectorAll('.card');
+  cards.forEach(card => {
+    card.style.border = '2px solid #ccc';
+    card.style.backgroundColor = '';
+    card.removeAttribute('data-recipe-name');
+    const textDiv = card.querySelector('.card-text');
+    if (textDiv) textDiv.textContent = '';
+  });
+  
 }
+
 
 // ===================== 게임 멈추기/일시정지 처리 =====================
 
