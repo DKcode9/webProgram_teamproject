@@ -568,81 +568,62 @@ function applyGuestBorders(stage, difficulty) {
 
   cards.forEach(card => {
     card.style.border = '2px solid #ccc';
+    card.style.backgroundColor = '';
+    card.removeAttribute('data-recipe-name');
     const textDiv = card.querySelector('.card-text');
-    if (textDiv) {
-      textDiv.textContent = '';
-    }
+    if (textDiv) textDiv.textContent = '';
   });
 
   const stageKey = `stage${stage.slice(-1)}`;
   const guestList = guestData[stageKey]?.[difficulty.toLowerCase()];
-
-  if (!guestList) {
-    console.warn(`손님 데이터가 존재하지 않습니다: stage=${stage}, difficulty=${difficulty}`);
-    return;
-  }
+  if (!guestList) return;
 
   guestList.forEach((guest, index) => {
     if (index >= cards.length) return;
     let borderColor = 'blue';
     let guestLabel = '일반 손님';
-
     if (guest.type === 'good') {
-      borderColor = 'green';
-      guestLabel = '착한 손님';
+      borderColor = 'green'; guestLabel = '착한 손님';
     } else if (guest.type === 'bad') {
-      borderColor = 'red';
-      guestLabel = '진상 손님';
+      borderColor = 'red'; guestLabel = '진상 손님';
     }
 
     const card = cards[index];
     card.style.border = `3px solid ${borderColor}`;
-    // cards[index].style.border = `3px solid ${borderColor}`;
-
     // 레시피 이름을 data 속성으로 저장
     card.dataset.recipeName = guest.recipe.name;
 
-    const textDiv = cards[index].querySelector('.card-text');
+    const textDiv = card.querySelector('.card-text');
     if (textDiv) {
-      // textDiv.textContent = `${guestLabel} <br> ${guest.recipe.juiceName}`;
       textDiv.innerHTML = `${guestLabel} <br> ${guest.recipe.juiceName}`;
     }
 
-    // 주문 정보 HTML 생성
+    // (이하 레시피 이미지·텍스트 생성 로직은 기존과 동일)
     const recipeDiv = document.createElement('div');
     recipeDiv.classList.add('recipe');
-
     const headerDiv = document.createElement('div');
     headerDiv.classList.add('recipe-header');
-
-    // 이미지 처리
     const recipeImg = document.createElement('img');
     recipeImg.classList.add('recipe-image');
 
-    // 이미지 구분
     let imgSrc = '';
     if (guest.recipe.name.startsWith('특수레시피')) {
-      // 특수 레시피: designs/recipeX.png
       const recipeIndex = getRecipeImageIndex(guest.recipe.name);
       imgSrc = `designs/recipe${recipeIndex}.png`;
     } else {
-      // 일반 레시피: designs/fruitX.png
       const fruitNumber = extractFruitNumber(guest.recipe.name);
       imgSrc = `designs/fruit${fruitNumber}.png`;
     }
-
     recipeImg.src = imgSrc;
     recipeImg.alt = guest.recipe.juiceName;
 
     const infoDiv = document.createElement('div');
-
     const recipeNameDiv = document.createElement('div');
     recipeNameDiv.classList.add('recipe-name');
     recipeNameDiv.textContent = guest.recipe.juiceName;
 
     const ingredientList = document.createElement('ul');
     ingredientList.classList.add('ingredient-list');
-
     guest.recipe.ingredients.forEach(ing => {
       const li = document.createElement('li');
       li.textContent = `${ing.fruit} X ${ing.count}`;
@@ -651,18 +632,55 @@ function applyGuestBorders(stage, difficulty) {
 
     infoDiv.appendChild(recipeNameDiv);
     infoDiv.appendChild(ingredientList);
-
     headerDiv.appendChild(recipeImg);
     headerDiv.appendChild(infoDiv);
-
     recipeDiv.appendChild(headerDiv);
-
     recipeContainer.appendChild(recipeDiv);
+  });
 
-    // 카드 초기화가 끝난 직후, 한 번 배경 색 검사
-    checkRecipes();
+  // 레시피 카드 배경 한 번 그려두기
+  checkRecipes();
+
+  // 클릭 시 "레시피 조건이 충족"되어 있으면 과일 소모 후 카드 삭제
+  const allRecipes = {};
+  specialRecipes.concat(normalRecipes).forEach(r => {
+    allRecipes[r.name] = r;
+  });
+
+  document.querySelectorAll('.card').forEach(card => {
+    card.onclick = () => {
+      // 1) 현재 카드가 '조건 만족' 상태인지 (backgroundColor === 'yellow')
+      if (card.style.backgroundColor !== 'yellow') {
+        // 조건 만족되지 않으면 클릭 무시
+        return;
+      }
+
+      // 2) 레시피 이름 → 객체 조회
+      const recipeName = card.dataset.recipeName;
+      if (!recipeName) return;
+      const recipe = allRecipes[recipeName];
+      if (!recipe) return;
+
+      // 3) 바구니(#f1~#f8)에서 재료만큼 차감
+      recipe.ingredients.forEach(ing => {
+        const idx = fruitIndexMap[ing.fruit]; // 0~7
+        if (idx == null) return;
+        const counterEl = document.getElementById(`f${idx+1}`);
+        if (!counterEl) return;
+        const haveCount = parseInt(counterEl.textContent, 10) || 0;
+        const remain = Math.max(0, haveCount - ing.count);
+        counterEl.textContent = remain;
+      });
+
+      // 4) 카드를 아예 삭제
+      card.remove();
+
+      // 5) 삭제 후 나머지 카드들 다시 검사하여 배경 갱신
+      checkRecipes();
+    };
   });
 }
+
 
 // 추가 유틸 함수
 function extractFruitNumber(recipeName) {
