@@ -595,7 +595,13 @@ function applyGuestBorders(stage, difficulty) {
       guestLabel = '진상 손님';
     }
 
-    cards[index].style.border = `3px solid ${borderColor}`;
+    const card = cards[index];
+    card.style.border = `3px solid ${borderColor}`;
+    // cards[index].style.border = `3px solid ${borderColor}`;
+
+    // 레시피 이름을 data 속성으로 저장
+    card.dataset.recipeName = guest.recipe.name;
+
     const textDiv = cards[index].querySelector('.card-text');
     if (textDiv) {
       // textDiv.textContent = `${guestLabel} <br> ${guest.recipe.juiceName}`;
@@ -652,6 +658,9 @@ function applyGuestBorders(stage, difficulty) {
     recipeDiv.appendChild(headerDiv);
 
     recipeContainer.appendChild(recipeDiv);
+
+    // 카드 초기화가 끝난 직후, 한 번 배경 색 검사
+    checkRecipes();
   });
 }
 
@@ -673,7 +682,48 @@ function getRecipeImageIndex(recipeName) {
   return match ? match[0] : 'default';
 }
 
+/**
+ * 현재 DOM에 표시된 카드(.card) 각각에 대해
+ * data-recipe-name으로 읽어온 레시피 객체를 찾아,
+ * 요구 과일 개수를 카운터(#f1~#f8)에서 확인해 조건 만족 시 배경 노란색 처리
+ */
+function checkRecipes() {
+  // 모든 레시피를 이름 기준으로 한 lookup 테이블 생성
+  const allRecipes = {};
+  specialRecipes.concat(normalRecipes).forEach(r => {
+    allRecipes[r.name] = r;
+  });
 
+  // 카드 요소들을 순회하며 검사
+  document.querySelectorAll('.card').forEach(card => {
+    const recipeName = card.dataset.recipeName;
+    if (!recipeName) return;
+
+    const recipe = allRecipes[recipeName];
+    if (!recipe) return;
+
+    // 이 레시피가 요구하는 모든 과일(count) 개수가 충족되는지 검사
+    let fulfilled = true;
+    for (const ing of recipe.ingredients) {
+      // ing.fruit → 예: "체리", "딸기" 등
+      // ing.count → 요구 개수(정수)
+      const idx = fruitIndexMap[ing.fruit]; // 0~7
+      if (idx == null) { fulfilled = false; break; }
+      const counterEl = document.getElementById(`f${idx+1}`);
+      const haveCount = (counterEl ? parseInt(counterEl.textContent, 10) : 0) || 0;
+      if (haveCount < ing.count) {
+        fulfilled = false;
+        break;
+      }
+    }
+
+    if (fulfilled) {
+      card.style.backgroundColor = 'yellow';
+    } else {
+      card.style.backgroundColor = '';
+    }
+  });
+}
 
 
 
@@ -1260,9 +1310,9 @@ class hitBall {
 }
 
 
-function hitBall_handleCollisions(){
-  if(hitballs.length <= 0 || balls.length <= 0 || gameOver) return;
-  
+function hitBall_handleCollisions() {
+  if (hitballs.length <= 0 || balls.length <= 0 || gameOver) return;
+
   for (let i = 0; i < balls.length; i++) {
     const b = balls[i];
     for (let hitball of hitballs) {
@@ -1281,10 +1331,10 @@ function hitBall_handleCollisions(){
         hitball.y += Math.sin(angle) * pushDist;
 
         if (b.breakCount <= 1) {
-          // 점수 추가
-          addScore(getFruitNameByIdent(b.ident));
+          // 과일이 완전히 깨어질 때
+          const fruitName = getFruitNameByIdent(b.ident);
+          addScore(fruitName);
 
-          // 바구니 카운터 증가
           const fruitIndex = b.ident + 1;
           const counterElement = document.getElementById(`f${fruitIndex}`);
           if (counterElement) {
@@ -1296,10 +1346,14 @@ function hitBall_handleCollisions(){
         } else {
           b.breakCount -= 1;
         }
+
+        // 바구니(카운터) 상태가 바뀌었으므로 레시피 카드 갱신
+        checkRecipes();
       }
     }
   }
 }
+
 
 
 function handleCanvasClick(event) {
@@ -1338,6 +1392,9 @@ function handleCanvasClick(event) {
             }
 
             // 클릭한 공만 처리하고 break
+            // 바구니(카운터) 상태가 바뀌었으므로 레시피 카드 갱신
+            // 과일 카운터가 바뀌었으니 레시피 카드 갱신
+            checkRecipes();
             break;
         }
     }
