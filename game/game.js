@@ -68,9 +68,37 @@ function showSettingsScreen() {
     $('#settings-screen').addClass('active');
 }
 
+function changeBallColor(color) {
+  hitBallColor = color;
+}
+
+function changeBgmVolume(volume) {
+  document.getElementById('bgm-volume-value').textContent = parseFloat(volume).toFixed(2);
+  const bgm = document.getElementById('main-bgm');
+  if (bgm) {
+      bgm.volume = volume;
+  }
+}
+
+function changeBgm(src) {
+  const bgm = document.getElementById('main-bgm');
+  if (bgm) {
+      const isPlaying = !bgm.paused;
+      bgm.pause();
+      bgm.src = src;
+      bgm.load();
+      if (isPlaying) {
+          bgm.play();
+      }
+  }
+}
+
 function startGame(stage) {
     currentStage = stage;
     hideAllScreens();
+
+    // stage 진입 효과음 재생
+    playStageSound();
 
     // 각 스테이지에 해당하는 스토리 화면 보여주기
     if (stage === 'stage1') {
@@ -264,6 +292,72 @@ function playButtonSound() {
     se.play();
 }
 
+function playStageSound() {
+  const se = document.getElementById('stage-sound');
+  if (se) {
+      se.currentTime = 0;
+      se.play();
+  }
+}
+
+function lowerBgmVolume(tempVolume = 0.1) {
+  const bgm = document.getElementById('main-bgm');
+  if (bgm && !bgm.paused) {
+      bgm.volumeBeforeDuck = bgm.volume;  // 이전 볼륨 저장
+      bgm.volume = tempVolume;
+  }
+}
+
+function restoreBgmVolume() {
+  const bgm = document.getElementById('main-bgm');
+  if (bgm && !bgm.paused && bgm.volumeBeforeDuck !== undefined) {
+      bgm.volume = bgm.volumeBeforeDuck;
+  }
+}
+
+function playGameOverSound() {
+  const se = document.getElementById('gameover-sound');
+  if (se) {
+      lowerBgmVolume();  // 먼저 BGM 줄이기
+      se.currentTime = 0;
+      se.play();
+
+      // 효과음 길이만큼 지난 후 BGM 복원
+      se.onended = () => {
+          restoreBgmVolume();
+      };
+  }
+}
+
+function playGameClearSound() {
+  const se = document.getElementById('gameclear-sound');
+  if (se) {
+      lowerBgmVolume();  // BGM 줄이기
+      se.currentTime = 0;
+      se.play();
+
+      // 효과음 끝난 후 복원
+      se.onended = () => {
+          restoreBgmVolume();
+      };
+  }
+}
+
+function playWallHitSound() {
+  const se = document.getElementById('wall-hit-sound');
+  if (se) {
+      se.currentTime = 0;
+      se.play();
+  }
+}
+
+function playFruitHitSound() {
+  const se = document.getElementById('fruit-hit-sound');
+  if (se) {
+      se.currentTime = 0;
+      se.play();
+  }
+}
 
 
 
@@ -1238,18 +1332,21 @@ class hitBall {
     if (this.x - this.radius < 0) {
       this.x = this.radius;
       this.vx *= -1; 
+      playWallHitSound();
     }
 
     // 우측 벽 충돌 처리
     if (this.x + this.radius > canvas.width) {
       this.x = canvas.width - this.radius;
       this.vx *= -1;
+      playWallHitSound();
     }
 
     // 상단 벽 충돌
     if (this.y - this.radius < 0) {
       this.y = this.radius;
       this.vy *= -1;
+      playWallHitSound();
     }
 
     // 패들과 충돌 검사
@@ -1355,6 +1452,8 @@ function hitBall_handleCollisions() {
         } else {
           b.breakCount -= 1;
         }
+
+        playFruitHitSound();
 
         // 바구니(카운터) 상태가 바뀌었으므로 레시피 카드 갱신
         checkRecipes();
@@ -1629,6 +1728,9 @@ function endGame() {
   }
   hitballtimer = [];
 
+  // 효과음 재생!
+  playGameOverSound();
+
   // #game-over 표시
   const gameOverDiv = document.getElementById('game-over');
   if (gameOverDiv) {
@@ -1647,6 +1749,9 @@ function clearGame() {
     clearTimeout(t);
   }
   hitballtimer = [];
+
+  // 효과음 재생!
+  playGameClearSound();
 
   // "클리어" 메시지 표시
   const gameClearDiv = document.getElementById('game-clear');

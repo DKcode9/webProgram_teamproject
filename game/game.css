@@ -467,3 +467,43 @@ body {
   border-radius: 10px;
   text-align: center;
 }
+
+/* 환경설정 화면 꾸미기 */
+.settings-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 20px 30px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    font-size: 18px;
+    width: 400px; /* 고정 폭 */
+    margin: 0 auto; /* 중앙 정렬 */
+}
+
+.settings-content label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+    color: #fff;
+}
+
+.settings-content input[type="color"],
+.settings-content input[type="range"],
+.settings-content select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.3);
+    color: #000;
+    font-size: 16px;
+}
+
+.settings-content span {
+    font-weight: bold;
+    margin-left: 10px;
+}
