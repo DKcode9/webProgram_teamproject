@@ -141,6 +141,9 @@ function initializeCanvas() {
 
     const gameOverDiv = document.getElementById('game-over');
     gameOverDiv.style.display = 'none';
+
+    const gameClearDiv = document.getElementById('game-clear');
+    gameClearDiv.style.display = 'none';
   
       
       
@@ -964,10 +967,20 @@ class tarBall {
     /* 
       [*] 바닥면 충돌
     */
+    
     if (this.y + this.radius > canvas.height) {
-      this.y = canvas.height - this.radius;
-      this.vy *= -bounce;
-    }
+  const idxh = hitballs.indexOf(this);
+  if (idxh >= 0){
+    hitballs.splice(idxh, 1);   
+  }
+  if (hitballs.length <= 0 && !gameOver){
+    gameOver = true;
+    gameCollapse();
+    endGame();
+  }      
+  return;
+}
+
 
     /* 
       [*] 좌측 벽 충돌
@@ -1120,7 +1133,8 @@ class hitBall {
       if (hitballs.length <= 0){
         gameOver = true;
         gameCollapse();
-        showStageScreen();      
+        endGame();
+        //showStageScreen();      
       }      
       return;
     }    
@@ -1469,10 +1483,11 @@ function animate() {
     paddle.draw();
   }
   // 게임 오버 처리 
-  if (balls.length === 0) {
-    endGame();
-    return;  
-  }
+  if (balls.length === 0 && !gameOver) {
+  gameOver = true;
+  clearGame();
+  return;  
+}
 
   aniHandle = requestAnimationFrame(animate);
 }
@@ -1508,6 +1523,25 @@ function endGame() {
 
   // #game-over 표시
   const gameOverDiv = document.getElementById('game-over');
+  if (gameOverDiv) {
+    gameOverDiv.style.display = 'flex';
+  }
+
+  console.log("게임 오버! 모든 tarBall이 제거되었습니다.");
+}
+
+function clearGame() {
+  gameOver = true;
+  cutAnimationSequence();  // 애니메이션 중단
+
+  // hitBallTimer도 멈춤
+  for (let t of hitballtimer) {
+    clearTimeout(t);
+  }
+  hitballtimer = [];
+
+  // #game-over 표시
+  const gameOverDiv = document.getElementById('game-clear');
   if (gameOverDiv) {
     gameOverDiv.style.display = 'flex';
   }
