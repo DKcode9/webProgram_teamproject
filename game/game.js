@@ -1599,10 +1599,10 @@ function animate() {
     paddle.draw();
   }
   // 게임 오버 처리 
-  if (balls.length === 0 && !gameOver) {
+  if (document.querySelectorAll('.card').length === 0 && !gameOver) {
   gameOver = true;
   clearGame();
-  return;  
+  return;
 }
 
   aniHandle = requestAnimationFrame(animate);
