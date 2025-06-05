@@ -1014,13 +1014,6 @@ function setpaddlescale(sz) {
 
 
 
-
-
-
-
-
-
-
 // 시스템 변수
 // hitball_speed 왜 hitball_size 를 수정하는대신 제공된 헬퍼함수를 사용하시면 편합니다.
 // 만약 여기서 수정할 경우엔 맨 하단의 gameCollision() 함수 부분의 초기화 리터럴도 수정해주시기 바랍니다.
@@ -1079,7 +1072,6 @@ class tarBall {
     this.vx = (Math.random() - 0.5) * 2; // 랜덤 초기 속도(x - 좌우 방향이므로 -0.5)
     this.image = ballImages[ident]; // 체리의 ident = 0, 이미지 이름으론 fruit1
     this.breakCount = breakCount; // index 0 -> 1, index 1 -> 2 ... 로 해석
-
     /*공 회전을 위한 변수*/
     this.angle = 0; // 각도(라디안)
     this.angularVelocity =  this.vx / this.radius; // 회전 속도 -> 수평 속도 비례 버전
@@ -1126,14 +1118,6 @@ class tarBall {
     // 회전 상태 복원 ~~~! 이 시점이 중요했다.
     ctx.restore();
 
-    //테두리 넣을지 고민중입니다.
-    // ctx.beginPath();
-    // ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-    // ctx.lineWidth = 2;
-    // ctx.strokeStyle = 'black';
-    // ctx.stroke();
-
-
   }
   update() {
     /* 
@@ -1157,17 +1141,17 @@ class tarBall {
     */
     
     if (this.y + this.radius > canvas.height) {
-  const idxh = hitballs.indexOf(this);
-  if (idxh >= 0){
-    hitballs.splice(idxh, 1);   
-  }
-  if (hitballs.length <= 0 && !gameOver){
-    gameOver = true;
-    gameCollapse();
-    endGame();
-  }      
-  return;
-}
+      const idxh = hitballs.indexOf(this);
+      if (idxh >= 0){
+        hitballs.splice(idxh, 1);   
+      }
+      if (hitballs.length <= 0 && !gameOver){
+        gameOver = true;
+        gameCollapse();
+        endGame();
+      }      
+      return;
+    }
 
 
     /* 
@@ -1233,6 +1217,10 @@ function isOverlapping(ball, others) {
 }
 
 
+/* 
+  tarBall 은 과일입니다. 
+  각 과일끼리의 충돌을 처리하는 함수입니다.
+*/
 function tarBall_handleCollisions() {
   if(balls.length <= 1 || gameOver) return;
   for (let i = 0; i < balls.length; i++) {
@@ -1243,7 +1231,6 @@ function tarBall_handleCollisions() {
       const dy = b2.y - b1.y;
       const dist = Math.sqrt(dx * dx + dy * dy); // 실제 거리
       const minDist = b1.radius + b2.radius; // 공 간 최소 유지 거리
-
       /* 
         [*] 두 공의 중심 좌표로 계산한 거리가 최소 유지 거리보다 더 작다면 -> '공 충돌 상황'!
           공들이 overlap 되는 순간, 두 공들의 중심을 기점으로 서로 밀어야 자연스러운 공 충돌을 구현할 수 있습니다.
@@ -1358,29 +1345,31 @@ class hitBall {
         즉, 여기서 dist 는 (paddle 의 특정 지점 중 가장 원과 가까운 지점) ~ (원 중심) 거리를 의미한다.
 
         그리고 그런 dist 가 원의 중심보다 작다면 -> 충돌!
-
-
       */
       const closestX = clamp(this.x, paddle.x, paddle.x + paddle.width);
       const closestY = clamp(this.y, paddle.y, paddle.y + paddle.height);
       const dx = this.x - closestX;
       const dy = this.y - closestY;
       const dist = Math.hypot(dx, dy);
-
       // ( 너무 빠른 공은 dist = 0 으로 바뀌며 dividedByZero 버그 발생!)
-      if (dist < this.radius) { // 충돌!
+
+      // 충돌 상황입니다. 공의 반지름보다 공 중심과 패들로부터 가장 가까운 부분까지의 거리가 더 작으면 파고든 상태입니다.
+      if (dist < this.radius) { 
+        
+        // 꼭짓점 부분에 닿았는지 확인하는 변수!
         const isVertexL = 
           (this.y + this.radius >= paddle.y )&&
           (this.y < paddle.y) &&
-          (this.x + this.radius > paddle.x) &&
-          (this.x < paddle.x);
+          (this.x + this.radius >= paddle.x) &&
+          (this.x <= paddle.x);
         const isVertexR = 
           (this.y + this.radius >= paddle.y )&&
           (this.y < paddle.y) &&
-          (this.x - this.radius < paddle.x + paddle.width) &&
-          (this.x > paddle.x + paddle.width);
+          (this.x - this.radius <= paddle.x + paddle.width) &&
+          (this.x >= paddle.x + paddle.width);
 
         if (!(isVertexL||isVertexR)) {
+            // 그냥 paddle 윗면입니다.
             this.vy *= -1;
             this.y = paddle.y - this.radius - 1;
         } else {
@@ -1511,8 +1500,6 @@ function hitBall_handleCollisions() {
     }
   }
 }
-
-
 
 function handleCanvasClick(event) {
     if (gameOver) return;
@@ -1823,7 +1810,6 @@ function clearGame() {
 
 
 // ===================== 게임 멈추기/일시정지 처리 =====================
-
 // ESC 키 누르면 게임 멈추기
 // 전역 변수로 일시정지 상태 관리
 let isPaused = false;
@@ -1941,9 +1927,6 @@ document.addEventListener('keyup', handle => {
   if (handle.key === 'd') setSpeedhitBall(15);
   if (handle.key === 'e') setpaddlescale(400);
 });
-
-
-
 //--------------------------------//[ENDLINE] Ball//--------------------------------//
 
 
