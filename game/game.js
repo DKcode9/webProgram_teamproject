@@ -49,7 +49,7 @@ function showStageScreen(difficulty) {
         currentDifficulty = difficulty;
     }
     hideAllScreens();
-    $('#story-screen').addClass('active');
+    $('#stage-screen').addClass('active');
     gameCollapse();
 }
 
@@ -666,6 +666,13 @@ function applyGuestBorders(stage, difficulty) {
   const guestList = guestData[stageKey]?.[difficulty.toLowerCase()];
   if (!guestList) return;
 
+  // type별 카운터 초기화
+  let typeCounters = {
+    good: 0,
+    normal: 0,
+    bad: 0
+  };
+
   guestList.forEach((guest, index) => {
     // 카드 요소 생성
     const card = document.createElement('div');
@@ -674,6 +681,40 @@ function applyGuestBorders(stage, difficulty) {
     // 카드 이미지
     const cardImage = document.createElement('div');
     cardImage.classList.add('card-image');
+
+    // 이미지 적용 위해서 코드 추가함
+    const img = document.createElement('img');
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'cover';
+
+    let typePrefix = '';
+    let typeKey = '';  // typeCounters key용
+
+    if (guest.type === 'good') {
+        typePrefix = 'good_customer';
+        typeKey = 'good';
+    } else if (guest.type === 'normal') {
+        typePrefix = 'customer';
+        typeKey = 'normal';
+    } else if (guest.type === 'bad') {
+        typePrefix = 'bad_customer';
+        typeKey = 'bad';
+    }
+
+    // 해당 타입 카운터 증가 후 index 로 사용
+    typeCounters[typeKey]++;
+    const typeIndex = typeCounters[typeKey];
+
+    // 파일명 구성
+    const stageNumber = currentStage.slice(-1);
+    const imageFileName = `designs/stage${stageNumber}_${typePrefix}${typeIndex}.png`
+
+    img.src = imageFileName;
+    img.alt = `${guest.type} customer`;
+
+    cardImage.appendChild(img);
+
     card.appendChild(cardImage);
 
     // 카드 텍스트

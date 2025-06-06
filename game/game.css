@@ -507,3 +507,42 @@ body {
     font-weight: bold;
     margin-left: 10px;
 }
+
+#story-screen,
+#stage1-story-screen,
+#stage2-story-screen,
+#stage3-story-screen {
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #FFCC70;  
+    position: relative;
+    padding: 30px;
+}
+
+/* 각각 background-image 설정만 개별로 */
+#story-screen {
+    background-image: url('designs/story00.png');
+}
+
+#stage1-story-screen {
+    background-image: url('designs/story01.png');
+}
+
+#stage2-story-screen {
+    background-image: url('designs/story02.png');
+}
+
+#stage3-story-screen {
+    background-image: url('designs/story03.png');
+}
+
+/* next-btn 위치 통일 */
+#story-screen .next-btn,
+#stage1-story-screen .next-btn,
+#stage2-story-screen .next-btn,
+#stage3-story-screen .next-btn {
+    position: absolute;
+    bottom: 20px;  
+    right: 20px; 
+}
