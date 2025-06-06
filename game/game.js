@@ -950,6 +950,8 @@ const fruitScoreMap = {
   '수박': 400
 };
 
+const radius_global = [27,29,40,33,35,39,42,47];
+
 function addScore(fruitName) {
   const scoreToAdd = fruitScoreMap[fruitName] || 0;
   currentScore += scoreToAdd;
@@ -1656,7 +1658,6 @@ function initBalls() { // tarBall & hitBall
   mapImgs();
   let attempts = 0;
 
-
   let spawnBalls = []; // 각 난이도 및 스테이지가 결정되면, 스폰할 tarBall 들의 갯수 해당 변수에 들어갑니다. 
   switch (currentDifficulty.toLowerCase()) {
       case 'easy':
@@ -1706,8 +1707,25 @@ function initBalls() { // tarBall & hitBall
     showStageScreen();
     return;
   }
+
+  /*
+  공 크기 설정 
+    fruit1 : 체리 - 27
+    fruit2 : 딸기 - 29
+    fruit3 : 포도 - 40
+    fruit4 : 오렌지 - 33
+    fruit5 : 사과 - 35
+    fruit6 : 복숭아 - 39
+    fruit7 : 파인애플 - 42
+    fruit8 : 수박 - 47
+
+  */
+  let radius = radius_global;
   let ident = 0; // 여기서 반복자는 배열 index 를 의미하며, 조회하는 spawnBalls 의 각 index 는 과일을 의미합니다.
   while(spawnBalls.length > ident && attempts < 2000) {
+
+    
+    //const radius = Math.random() * 17 + 25; // 공 크기 설정
     /* 
       초기 공 생성 로직
         [a] 공을 상자(랜덤지름x랜덤지름)으로 생각
@@ -1715,14 +1733,13 @@ function initBalls() { // tarBall & hitBall
         [c] b 를 통해 남은 공간에 상자의 반지름 만큼의 공간을 이동시키면 벽에 오버랩되는 공 없이 랜덤 좌표를 결정할 수 있다.
     */
     // 공 크기 설정
-    const radius = Math.random() * 17 + 25; // 공 크기 설정
 
     // 랜덤 위치 결정
-    const x = Math.random() * (canvas.width - 2 * radius) + radius;
-    const y = Math.random() * (canvas.height - 2 * radius) + radius;
+    const x = Math.random() * (canvas.width - 2 * radius[ident]) + radius[ident];
+    const y = Math.random() * (canvas.height - 2 * radius[ident]) + radius[ident];
     
     // 인스턴스 생성
-    const newBall = new tarBall(x, y, radius, ident, tbreakCount[ident]);
+    const newBall = new tarBall(x, y, radius[ident], ident, tbreakCount[ident]);
 
     // 오버랩 검사에 통과한 newball에 한하여 balls 전역 배열에 push 됩니다. 
     if (!isOverlapping(newBall, balls)) {
