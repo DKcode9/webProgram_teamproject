@@ -879,6 +879,10 @@ function applyGuestBorders(stage, difficulty) {
 
   
 
+  if (!applyGuestBorders.__keyListenerAttached) {
+    document.addEventListener('keydown', handleKeyDelete);
+    applyGuestBorders.__keyListenerAttached = true;
+  }
 
 }
 
