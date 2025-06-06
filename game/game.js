@@ -683,30 +683,24 @@ function applyGuestBorders(stage, difficulty) {
   };
 
   guestList.forEach((guest, index) => {
-    
-    // 1) 카드 요소 생성
+    // ─────────────────────────────────────────────
+    // 카드 요소 생성
+    // ─────────────────────────────────────────────
     const card = document.createElement('div');
     card.classList.add('card');
-
-    // 2) card-content 요소 생성
     const cardContent = document.createElement('div');
     cardContent.classList.add('card-content');
-
-    // 3) card-image-container 요소 생성
     const cardImageContainer = document.createElement('div');
     cardImageContainer.classList.add('card-image-container');
-
-    // 4) 카드 이미지 요소 생성
     const cardImage = document.createElement('div');
     cardImage.classList.add('card-image');
 
-    // 5) 이미지 태그 생성
     const img = document.createElement('img');
     img.style.width = '100%';
     img.style.height = '100%';
     img.style.objectFit = 'cover';
 
-    // 6) 이미지 소스 설정
+    // 이미지 소스 설정
     let typePrefix = '';
     let typeKey = '';
     if (guest.type === 'good') {
@@ -727,13 +721,13 @@ function applyGuestBorders(stage, difficulty) {
     img.src = imageFileName;
     img.alt = `${guest.type} customer`;
 
-    // 7) 카드 이미지에 이미지 삽입
+    // 카드 이미지에 이미지 삽입
     cardImage.appendChild(img);
 
-    // 8) card-image-container에 카드 이미지 삽입
+    // card-image-container에 카드 이미지 삽입
     cardImageContainer.appendChild(cardImage);
 
-    // 9) 카드 텍스트 생성
+    // 카드 텍스트 생성
     const cardText = document.createElement('div');
     cardText.classList.add('card-text');
     let guestLabel = '일반 손님';
@@ -749,52 +743,50 @@ function applyGuestBorders(stage, difficulty) {
     card.dataset.recipeName = guest.recipe.name;
     cardText.innerHTML = `${guestLabel}<br>${guest.recipe.juiceName}`;
 
-    // 10) card-content에 이미지 컨테이너와 카드 텍스트 추가
+    // card-content에 이미지 컨테이너와 카드 텍스트 추가
     cardContent.appendChild(cardImageContainer);
     cardContent.appendChild(cardText);
 
-    // 11) card에 card-content 추가
+    // card에 card-content 추가
     card.appendChild(cardContent);
 
-    // 12) gauge-container 생성
-    const gaugeContainer = document.createElement('div');
-    gaugeContainer.classList.add('gauge-container');
+    // ─────────────────────────────────────────────
+    // good 또는 bad 손님에게만 게이지 생성
+    // ─────────────────────────────────────────────
+    if (guest.type === 'good' || guest.type === 'bad') {
+      // gauge-container 생성
+      const gaugeContainer = document.createElement('div');
+      gaugeContainer.classList.add('gauge-container');
+      gaugeContainer.style.height = '3px';
 
-    // 13) gauge-fill 생성
-    const gaugeFill = document.createElement('div');
-    gaugeFill.classList.add('gauge-fill');
+      const gaugeFill = document.createElement('div');
+      gaugeFill.classList.add('gauge-fill');
 
-    // 배경색: good은 green, bad는 red
-    if (guest.type === 'good') {
-      gaugeFill.style.backgroundColor = 'green';
-    } else if (guest.type === 'bad') {
-      gaugeFill.style.backgroundColor = 'red';
-    } else {
-      gaugeFill.style.backgroundColor = '#4caf50'; // 기본색
+      // 착한(good) 손님은 게이지 40초, 진상(bad) 손님은 게이지 100초 (나중에 보이는 것도 고려)
+      // 착한 손님은 게이지 초록색, 진상 손님은 게이지 빨간색색
+      const durationSeconds = guest.type === 'good' ? 40 : 100;
+      gaugeFill.style.backgroundColor = guest.type === 'good' ? 'green' : 'red';
+
+      gaugeFill.style.transition = `width ${durationSeconds}s linear`;
+      gaugeContainer.appendChild(gaugeFill);
+
+      card.appendChild(gaugeContainer);
+
+      // 게이지 애니메이션 시작 (다음 tick에 width를 0%로)
+      setTimeout(() => {
+        gaugeFill.style.width = '0%';
+      }, 0);
+
+      // durationSeconds 후에 게이지 컨테이너 제거
+      setTimeout(() => {
+        gaugeContainer.remove();
+      }, durationSeconds * 1000);
     }
-
-    // 14) gauge-container에 gauge-fill 추가
-    gaugeContainer.appendChild(gaugeFill);
-
-    // 15) card에 gauge-container 추가
-    card.appendChild(gaugeContainer);
-
-    // 16) 게이지 애니메이션 시작
-    setTimeout(() => {
-      gaugeFill.style.width = '0%';
-    }, 0);
-
-    setTimeout(() => {
-      gaugeContainer.remove();
-    }, 60000);
-
-
-
 
 
     // ─────────────────────────────────────────────
-
     // 클릭 이벤트 바인딩 (기존 코드 그대로)
+    // ─────────────────────────────────────────────
     card.onclick = () => {
       if (card.style.backgroundColor !== 'yellow') return;
       const recipeName = card.dataset.recipeName;
@@ -863,6 +855,7 @@ function applyGuestBorders(stage, difficulty) {
   // 카드 배경 초기화
   checkRecipes();
 }
+
 
 
 
