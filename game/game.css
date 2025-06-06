@@ -250,6 +250,15 @@ body {
     flex-shrink: 0;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     margin-bottom: 2px;
+
+    position: relative;         /* transform 애니메이션을 위해 필요 */
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* 'slide-out' 클래스가 붙으면 왼쪽으로 이동 + 투명해진다 */
+.card.slide-out {
+  transform: translateX(-100%);
+  opacity: 0;
 }
 
 .card-content {

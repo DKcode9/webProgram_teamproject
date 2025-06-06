@@ -802,6 +802,16 @@ function applyGuestBorders(stage, difficulty) {
       }
 
       const recipe = [...specialRecipes, ...normalRecipes].find(r => r.name === recipeName);
+
+      if (recipe) {
+        recipe.ingredients.forEach(ing => {
+          const idx = fruitIndexMap[ing.fruit];
+          const counterEl = document.getElementById(`f${idx + 1}`);
+          const haveCount = parseInt(counterEl.textContent, 10) || 0;
+          counterEl.textContent = Math.max(0, haveCount - ing.count);
+        });
+      }
+     /*
       if (!recipe) return;
       recipe.ingredients.forEach(ing => {
         const idx = fruitIndexMap[ing.fruit];
@@ -811,8 +821,10 @@ function applyGuestBorders(stage, difficulty) {
         const haveCount = parseInt(counterEl.textContent, 10) || 0;
         counterEl.textContent = Math.max(0, haveCount - ing.count);
       });
+     */
       playCardClickSound();
-      card.remove();
+      // card.remove();
+      removeCardWithAnimation(card);
       checkRecipes();
     };
 
@@ -861,9 +873,6 @@ function applyGuestBorders(stage, difficulty) {
     headerDiv.appendChild(infoDiv);
     recipeDiv.appendChild(headerDiv);
     recipeContainer.appendChild(recipeDiv);
-
-    // 최종으로 recipeContainer에 추가
-    recipeContainer.appendChild(recipeDiv);
   });
 
 
@@ -895,6 +904,7 @@ function handleKeyDelete(e) {
     if (!targetCard) return;
     if (targetCard.style.backgroundColor === 'yellow') {
       targetCard.onclick(); // 클릭 로직 재사용
+      // zremoveCardWithAnimation(targetCard);
     }
 }
 
@@ -960,7 +970,25 @@ function checkRecipes() {
   });
 }
 
-
+/**
+ * 카드 제거하면서 애니메이션 효과 부여
+ * @param {} card 
+ * @returns 
+ */
+function removeCardWithAnimation(card) {
+  // 이미 삭제 애니메이션이 진행 중이라면 두 번 실행하지 않도록
+  if (card.classList.contains('slide-out')) return;
+  // 카드에 'slide-out' 클래스를 추가하여 애니메이션 실행
+  card.classList.add('slide-out');
+  // 애니메이션 끝나는 시점(transitionend) 감지 → 실제로 DOM에서 제거
+  card.addEventListener('transitionend', function onEnd(e) {
+    // transform 혹은 opacity에 대한 transition이 끝났을 때만 실행
+    if (e.propertyName === 'transform' || e.propertyName === 'opacity') {
+      card.remove();              // DOM에서 완전히 삭제
+      card.removeEventListener('transitionend', onEnd);
+    }
+  });
+}
 
 
 //--------------------------------//[STARTLINE] Ball//--------------------------------//
