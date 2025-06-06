@@ -569,6 +569,23 @@ body {
   text-align: center;
 }
 
+#back-to-main {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px 40px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
 /* 환경설정 화면 꾸미기 */
 .settings-content {
     display: flex;

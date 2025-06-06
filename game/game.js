@@ -53,14 +53,45 @@ function showStoryScreen(){
  */
 
 function showStageScreen(difficulty) {
+    const backToMain = document.getElementById('back-to-main');
+
     if (difficulty) {
         currentDifficulty = difficulty;
     }
-    hideAllScreens();
-    $('#story-screen').addClass('active');
-    gameCollapse();
-}
 
+    pauseGame();
+
+    if ($('#game-screen').hasClass('active')) {
+        console.log("현재 화면은 게임 스크린, back-to-main 활성화");
+        $('#back-to-main').css('display', 'flex');
+        backToMain.style.display = 'flex';
+    } else {
+        $('#back-to-main').css('display', 'none');
+        hideAllScreens();
+        $('#story-screen').addClass('active');
+        gameCollapse();
+    }
+
+}
+    
+
+
+function proceedToStageScreen() {
+    const backToMain = document.getElementById('back-to-main');
+    const gameScreen = document.getElementById('game-screen');
+
+    if ($('#game-screen').hasClass('active')) {
+        console.log("현재 화면은 게임 스크린, back-to-main 활성화");
+        $('#back-to-main').css('display', 'flex');
+        backToMain.style.display = 'flex';
+    } else {
+        $('#back-to-main').css('display', 'none');
+        // 2) 나머지 화면 전환 로직
+        hideAllScreens();
+        $('#stage-screen').addClass('active');
+    }
+
+}
 function proceedToRuleScreen() {
     hideAllScreens();
     $('#rule-screen').addClass('active');
@@ -70,6 +101,7 @@ function proceedToStageScreen() {
     hideAllScreens();
     $('#stage-screen').addClass('active');
 }
+
 
 function showSettingsScreen() {
     hideAllScreens();
@@ -2061,6 +2093,9 @@ function pauseGame() {
 function resumeGame() {
   // 애니메이션 재시작
   gameOver = false;
+
+  const backToMain = document.getElementById('back-to-main');
+  backToMain.style.display='none';
 
   // 배경음악 다시 재생
   const bgm = document.getElementById('main-bgm');
