@@ -750,9 +750,10 @@ function applyGuestBorders(stage, difficulty) {
     // card에 card-content 추가
     card.appendChild(cardContent);
 
-    // ─────────────────────────────────────────────
-    // good 또는 bad 손님에게만 게이지 생성
-    // ─────────────────────────────────────────────
+    /**
+     * 게이지는 good, bad 손님에게만 적용됩니다
+     */
+
     if (guest.type === 'good' || guest.type === 'bad') {
       // gauge-container 생성
       const gaugeContainer = document.createElement('div');
@@ -763,7 +764,7 @@ function applyGuestBorders(stage, difficulty) {
       gaugeFill.classList.add('gauge-fill');
 
       // 착한(good) 손님은 게이지 40초, 진상(bad) 손님은 게이지 100초 (나중에 보이는 것도 고려)
-      // 착한 손님은 게이지 초록색, 진상 손님은 게이지 빨간색색
+      // 착한 손님은 게이지 초록색, 진상 손님은 게이지 빨간색
       const durationSeconds = guest.type === 'good' ? 40 : 100;
       gaugeFill.style.backgroundColor = guest.type === 'good' ? 'green' : 'red';
 
@@ -784,9 +785,12 @@ function applyGuestBorders(stage, difficulty) {
     }
 
 
-    // ─────────────────────────────────────────────
-    // 클릭 이벤트 바인딩 (기존 코드 그대로)
-    // ─────────────────────────────────────────────
+     /**
+       * 마우스 클릭으로 .card를 제거할 수도 있습니다
+       * 단, 밑에 키보드 콜백을 사용하는 부분을 추가했습니다
+      */
+
+    
     card.onclick = () => {
       if (card.style.backgroundColor !== 'yellow') return;
       const recipeName = card.dataset.recipeName;
@@ -809,9 +813,8 @@ function applyGuestBorders(stage, difficulty) {
     cardContainer.appendChild(card);
   });
 
-  // ─────────────────────────────────────────────
-  // 3) 레시피 출력 (기존 코드)
-  // ─────────────────────────────────────────────
+ 
+
   guestList.forEach(guest => {
     const recipeDiv = document.createElement('div');
     recipeDiv.classList.add('recipe');
@@ -852,8 +855,33 @@ function applyGuestBorders(stage, difficulty) {
     recipeContainer.appendChild(recipeDiv);
   });
 
+
   // 카드 배경 초기화
   checkRecipes();
+
+  /**
+   * 키보드 이벤트 리스너 추가
+   * 
+   * 상위 1-4 번째 카드에 대해서 키보드 1-4를 누르면 해당 카드가 제거됩니다. 
+   * 단, 바구니에 과일이 모여 노란색일 경우에만 가능합니다다
+   */
+
+  document.addEventListener('keydown', function onKeyDelete(e) {
+    // 숫자키 '1'~'4'를 눌렀을 때만 동작
+    if (!['1','2','3','4'].includes(e.key)) return;
+
+    const idx = parseInt(e.key, 10) - 1;               
+    const cards = cardContainer.querySelectorAll('.card'); // 현재 렌더링링된 카드 리스트
+    const targetCard = cards[idx];                        
+
+    if (!targetCard) return;                            
+
+    if (targetCard.style.backgroundColor === 'yellow') {
+      targetCard.onclick();
+    }
+  }, { once: false });
+
+
 }
 
 
