@@ -24,19 +24,16 @@ function hideAllScreens() {
 function showMainScreen() {
     hideAllScreens();
     $('#main-screen').addClass('active');
-    
 }
 
 function showDifficultyScreen() {
     hideAllScreens();
     $('#difficulty-screen').addClass('active');
-    
 }
 
 function showRuleScreen(){
     hideAllScreens();
     $('#rule-screen').addClass('active');
-
 }
 
 function showStoryScreen(){
@@ -798,6 +795,12 @@ function applyGuestBorders(stage, difficulty) {
       if (card.style.backgroundColor !== 'yellow') return;
       const recipeName = card.dataset.recipeName;
       if (!recipeName) return;
+
+      const matchingRecipeDiv = document.querySelector(`.recipe[data-recipe-name="${recipeName}"]`);
+      if (matchingRecipeDiv) {
+        matchingRecipeDiv.remove();
+      }
+
       const recipe = [...specialRecipes, ...normalRecipes].find(r => r.name === recipeName);
       if (!recipe) return;
       recipe.ingredients.forEach(ing => {
@@ -821,6 +824,8 @@ function applyGuestBorders(stage, difficulty) {
   guestList.forEach(guest => {
     const recipeDiv = document.createElement('div');
     recipeDiv.classList.add('recipe');
+    // ★ 여기서 recipeDiv에 data-recipe-name 속성 추가
+    recipeDiv.dataset.recipeName = guest.recipe.name;
     const headerDiv = document.createElement('div');
     headerDiv.classList.add('recipe-header');
     const recipeImg = document.createElement('img');
@@ -855,6 +860,9 @@ function applyGuestBorders(stage, difficulty) {
     headerDiv.appendChild(recipeImg);
     headerDiv.appendChild(infoDiv);
     recipeDiv.appendChild(headerDiv);
+    recipeContainer.appendChild(recipeDiv);
+
+    // 최종으로 recipeContainer에 추가
     recipeContainer.appendChild(recipeDiv);
   });
 
