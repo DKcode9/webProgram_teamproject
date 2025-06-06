@@ -12,6 +12,9 @@ $(document).ready(function() {
     // 페이지가 로드되면 메인 화면 표시
     showMainScreen();
 
+  document.addEventListener('keydown', handleKeyDelete);
+
+
 });
 
 function hideAllScreens() {
@@ -866,26 +869,22 @@ function applyGuestBorders(stage, difficulty) {
    * 단, 바구니에 과일이 모여 노란색일 경우에만 가능합니다다
    */
 
-  document.addEventListener('keydown', function onKeyDelete(e) {
-    // 숫자키 '1'~'4'를 눌렀을 때만 동작
-    if (!['1','2','3','4'].includes(e.key)) return;
-
-    const idx = parseInt(e.key, 10) - 1;               
-    const cards = cardContainer.querySelectorAll('.card'); // 현재 렌더링링된 카드 리스트
-    const targetCard = cards[idx];                        
-
-    if (!targetCard) return;                            
-
-    if (targetCard.style.backgroundColor === 'yellow') {
-      targetCard.onclick();
-    }
-  }, { once: false });
+  
 
 
 }
 
 
-
+function handleKeyDelete(e) {
+    if (!['1','2','3','4'].includes(e.key)) return;
+    const idx = parseInt(e.key, 10) - 1;
+    const cards = document.querySelectorAll('.card');
+    const targetCard = cards[idx];
+    if (!targetCard) return;
+    if (targetCard.style.backgroundColor === 'yellow') {
+      targetCard.onclick(); // 클릭 로직 재사용
+    }
+}
 
 
 // 추가 유틸 함수
