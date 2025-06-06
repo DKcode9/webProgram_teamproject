@@ -41,9 +41,7 @@
 
       <div class="screen" id="rule-screen">
         <button class="back-btn" onclick="playButtonSound(); showStoryScreen()">← 뒤로</button>
-        <h2 class="subtitle">게임 규칙</h2>
-        <p>게임 규칙 설명</p>
-        <button class="btn" onclick="playButtonSound(); proceedToStageScreen()">다음</button>
+        <button class="btn next-btn" onclick="playButtonSound(); proceedToStageScreen()">다음</button>
       </div>
 
       <!------------ 스테이지 선택 화면 ------------>
@@ -91,17 +89,17 @@
 
       <!------------ Stage Story Screens ------------>
       <div class="screen" id="stage1-story-screen">
-        <button class="back-btn" onclick="playButtonSound(); showStageScreen()">← 뒤로</button>
+        <button class="back-btn" onclick="playButtonSound(); proceedToStageScreen()">← 뒤로</button>
         <button class="btn next-btn" onclick="playButtonSound(); proceedToGame()">다음</button>
       </div>
 
       <div class="screen" id="stage2-story-screen">
-        <button class="back-btn" onclick="playButtonSound(); showStageScreen()">← 뒤로</button>
+        <button class="back-btn" onclick="playButtonSound(); proceedToStageScreen()">← 뒤로</button>
         <button class="btn next-btn" onclick="playButtonSound(); proceedToGame()">다음</button>
       </div>
 
       <div class="screen" id="stage3-story-screen">
-        <button class="back-btn" onclick="playButtonSound(); showStageScreen()">← 뒤로</button>
+        <button class="back-btn" onclick="playButtonSound(); proceedToStageScreen()">← 뒤로</button>
         <button class="btn next-btn" onclick="playButtonSound(); proceedToGame()">다음</button>
       </div>
 
@@ -224,17 +222,13 @@
             </div>
             <!-- Game Over 창 -->
           <div id="game-over">
-            <div class="game-over-content">
-              <h2>Game Over!</h2>
-              <button class="btn" onclick="playButtonSound(); showMainScreen()">main</button>
-            </div>
+            <img src="designs/gameover.png" alt="Game Over" class="gameover-image" />
+            <button class="btn" onclick="playButtonSound(); showMainScreen()">main</button>
           </div>
 
           <div id="game-clear">
-            <div class="game-over-content">
-              <h2>Clear!</h2>
-              <button class="btn" onclick="playButtonSound(); showMainScreen()">next</button>
-            </div>
+            <img src="designs/gameclear.png" alt="Stage Clear" class="gameclear-image" />
+            <button class="btn" onclick="playButtonSound(); showMainScreen()">next</button>
           </div>
 
 
@@ -291,6 +285,9 @@
 
         <!-- 과일 충돌 효과음 -->
         <audio id="fruit-hit-sound" src="SE/fruit_hit.mp3"></audio>
+
+        <!-- 카드 클릭시 효과음 -->
+        <audio id="card-click-sound" src="SE/card_click.mp3"></audio>
 </body>
 </html>
 

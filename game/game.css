@@ -435,9 +435,21 @@ body {
   height: 100%;
   background-color: rgba(0,0,0,0.7); /* 반투명 배경 */
   display: none; /* 기본적으로 숨김 */
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   z-index: 10; 
+}
+
+#game-over .gameover-image {
+    max-width: 300px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+#game-over .btn {
+    font-size: 20px;
+    padding: 12px 30px;
 }
 
 #game-clear{
@@ -448,9 +460,21 @@ body {
   height: 100%;
   background-color: rgba(0,0,0,0.7); /* 반투명 배경 */
   display: none; /* 기본적으로 숨김 */
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   z-index: 10; 
+}
+
+#game-clear .gameclear-image {
+    max-width: 400px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+#game-clear .btn {
+    font-size: 20px;
+    padding: 12px 30px;
 }
 
 #game-clear .game-over-content {
@@ -542,6 +566,22 @@ body {
 #stage1-story-screen .next-btn,
 #stage2-story-screen .next-btn,
 #stage3-story-screen .next-btn {
+    position: absolute;
+    bottom: 20px;  
+    right: 20px; 
+}
+
+#rule-screen {
+    background-image: url('designs/rule.png'); /* 원하는 이미지 파일명 */
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #FFCC70;  
+    position: relative;
+    padding: 30px;
+}
+
+#rule-screen .next-btn {
     position: absolute;
     bottom: 20px;  
     right: 20px; 

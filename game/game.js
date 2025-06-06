@@ -49,7 +49,7 @@ function showStageScreen(difficulty) {
         currentDifficulty = difficulty;
     }
     hideAllScreens();
-    $('#stage-screen').addClass('active');
+    $('#story-screen').addClass('active');
     gameCollapse();
 }
 
@@ -359,6 +359,13 @@ function playFruitHitSound() {
   }
 }
 
+function playCardClickSound() {
+  const se = document.getElementById('card-click-sound');
+  if (se) {
+      se.currentTime = 0;
+      se.play();
+  }
+}
 
 
 const specialRecipes = [
@@ -753,6 +760,8 @@ function applyGuestBorders(stage, difficulty) {
         const haveCount = parseInt(counterEl.textContent, 10) || 0;
         counterEl.textContent = Math.max(0, haveCount - ing.count);
       });
+
+      playCardClickSound();
 
       card.remove();
       checkRecipes();
