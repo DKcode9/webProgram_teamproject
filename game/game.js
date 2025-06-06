@@ -1,9 +1,11 @@
 //난이도 전역 변수로 저장
 let currentDifficulty = '';
+
 //스테이지 전역 변수로 저장
+// 예시 : stage1, stage2, stage3
 let currentStage = '';
 
-// 점수판판
+// 점수판
 let currentScore = 0;
 
 $(document).ready(function() {
@@ -681,55 +683,61 @@ function applyGuestBorders(stage, difficulty) {
   };
 
   guestList.forEach((guest, index) => {
-    // 카드 요소 생성
+    
+    // 1) 카드 요소 생성
     const card = document.createElement('div');
     card.classList.add('card');
 
-    // 카드 이미지
+    // 2) card-content 요소 생성
+    const cardContent = document.createElement('div');
+    cardContent.classList.add('card-content');
+
+    // 3) card-image-container 요소 생성
+    const cardImageContainer = document.createElement('div');
+    cardImageContainer.classList.add('card-image-container');
+
+    // 4) 카드 이미지 요소 생성
     const cardImage = document.createElement('div');
     cardImage.classList.add('card-image');
 
-    // 이미지 적용 위해서 코드 추가함
+    // 5) 이미지 태그 생성
     const img = document.createElement('img');
     img.style.width = '100%';
     img.style.height = '100%';
     img.style.objectFit = 'cover';
 
+    // 6) 이미지 소스 설정
     let typePrefix = '';
-    let typeKey = '';  // typeCounters key용
-
+    let typeKey = '';
     if (guest.type === 'good') {
-        typePrefix = 'good_customer';
-        typeKey = 'good';
+      typePrefix = 'good_customer';
+      typeKey = 'good';
     } else if (guest.type === 'normal') {
-        typePrefix = 'customer';
-        typeKey = 'normal';
+      typePrefix = 'customer';
+      typeKey = 'normal';
     } else if (guest.type === 'bad') {
-        typePrefix = 'bad_customer';
-        typeKey = 'bad';
+      typePrefix = 'bad_customer';
+      typeKey = 'bad';
     }
 
-    // 해당 타입 카운터 증가 후 index 로 사용
     typeCounters[typeKey]++;
     const typeIndex = typeCounters[typeKey];
-
-    // 파일명 구성
     const stageNumber = currentStage.slice(-1);
-    const imageFileName = `designs/stage${stageNumber}_${typePrefix}${typeIndex}.png`
-
+    const imageFileName = `designs/stage${stageNumber}_${typePrefix}${typeIndex}.png`;
     img.src = imageFileName;
     img.alt = `${guest.type} customer`;
 
+    // 7) 카드 이미지에 이미지 삽입
     cardImage.appendChild(img);
 
-    card.appendChild(cardImage);
+    // 8) card-image-container에 카드 이미지 삽입
+    cardImageContainer.appendChild(cardImage);
 
-    // 카드 텍스트
+    // 9) 카드 텍스트 생성
     const cardText = document.createElement('div');
     cardText.classList.add('card-text');
     let guestLabel = '일반 손님';
     let borderColor = 'blue';
-
     if (guest.type === 'good') {
       borderColor = 'green';
       guestLabel = '착한 손님';
@@ -737,21 +745,62 @@ function applyGuestBorders(stage, difficulty) {
       borderColor = 'red';
       guestLabel = '진상 손님';
     }
-
     card.style.border = `3px solid ${borderColor}`;
     card.dataset.recipeName = guest.recipe.name;
-    cardText.innerHTML = `${guestLabel} <br> ${guest.recipe.juiceName}`;
-    card.appendChild(cardText);
+    cardText.innerHTML = `${guestLabel}<br>${guest.recipe.juiceName}`;
 
-    // 클릭 이벤트
+    // 10) card-content에 이미지 컨테이너와 카드 텍스트 추가
+    cardContent.appendChild(cardImageContainer);
+    cardContent.appendChild(cardText);
+
+    // 11) card에 card-content 추가
+    card.appendChild(cardContent);
+
+    // 12) gauge-container 생성
+    const gaugeContainer = document.createElement('div');
+    gaugeContainer.classList.add('gauge-container');
+
+    // 13) gauge-fill 생성
+    const gaugeFill = document.createElement('div');
+    gaugeFill.classList.add('gauge-fill');
+
+    // 배경색: good은 green, bad는 red
+    if (guest.type === 'good') {
+      gaugeFill.style.backgroundColor = 'green';
+    } else if (guest.type === 'bad') {
+      gaugeFill.style.backgroundColor = 'red';
+    } else {
+      gaugeFill.style.backgroundColor = '#4caf50'; // 기본색
+    }
+
+    // 14) gauge-container에 gauge-fill 추가
+    gaugeContainer.appendChild(gaugeFill);
+
+    // 15) card에 gauge-container 추가
+    card.appendChild(gaugeContainer);
+
+    // 16) 게이지 애니메이션 시작
+    setTimeout(() => {
+      gaugeFill.style.width = '0%';
+    }, 0);
+
+    setTimeout(() => {
+      gaugeContainer.remove();
+    }, 60000);
+
+
+
+
+
+    // ─────────────────────────────────────────────
+
+    // 클릭 이벤트 바인딩 (기존 코드 그대로)
     card.onclick = () => {
       if (card.style.backgroundColor !== 'yellow') return;
-
       const recipeName = card.dataset.recipeName;
       if (!recipeName) return;
       const recipe = [...specialRecipes, ...normalRecipes].find(r => r.name === recipeName);
       if (!recipe) return;
-
       recipe.ingredients.forEach(ing => {
         const idx = fruitIndexMap[ing.fruit];
         if (idx == null) return;
@@ -760,9 +809,7 @@ function applyGuestBorders(stage, difficulty) {
         const haveCount = parseInt(counterEl.textContent, 10) || 0;
         counterEl.textContent = Math.max(0, haveCount - ing.count);
       });
-
       playCardClickSound();
-
       card.remove();
       checkRecipes();
     };
@@ -770,7 +817,9 @@ function applyGuestBorders(stage, difficulty) {
     cardContainer.appendChild(card);
   });
 
-  // 레시피 출력
+  // ─────────────────────────────────────────────
+  // 3) 레시피 출력 (기존 코드)
+  // ─────────────────────────────────────────────
   guestList.forEach(guest => {
     const recipeDiv = document.createElement('div');
     recipeDiv.classList.add('recipe');
@@ -814,6 +863,7 @@ function applyGuestBorders(stage, difficulty) {
   // 카드 배경 초기화
   checkRecipes();
 }
+
 
 
 
@@ -1848,6 +1898,8 @@ function clearGame() {
   gameOver = true;
   cutAnimationSequence();  // 애니메이션 중단
 
+  
+
   // hitBallTimer도 멈춤
   for (let t of hitballtimer) {
     clearTimeout(t);
@@ -1875,6 +1927,18 @@ function clearGame() {
   
 }
 
+// currentStage가 'stage1'이면 'stage2' 스토리 화면을 띄우고,
+// 'stage2'이면 'stage3' 스토리 화면을 띄우도록 한다.
+function nextStage() {
+  if (currentStage === 'stage1') {
+    startGame('stage2');  // 자동으로 currentStage='stage2'가 됩니다.
+  } else if (currentStage === 'stage2') {
+    startGame('stage3');  // 자동으로 currentStage='stage3'가 됩니다.
+  } else {
+    // 예: stage3도 클리어했다면 메인 화면으로 돌아가거나, 원하는 다른 화면으로…
+    showMainScreen();
+  }
+}
 
 // ===================== 게임 멈추기/일시정지 처리 =====================
 // ESC 키 누르면 게임 멈추기

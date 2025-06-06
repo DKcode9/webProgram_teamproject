@@ -87,16 +87,43 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
+/* disabled 상태(클릭 불가능)일 때 */
+.btn.stage:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* (기존에 쓰시던 배경 이미지는 그대로 두세요) */
 .btn.stage.stage1 {
-    background-image: url('designs/stage1.png');
+  background-image: url('designs/stage1.png');
 }
 
 .btn.stage.stage2 {
-    background-image: url('designs/stage2.png');
+  background-image: url('designs/stage2.png');
 }
 
 .btn.stage.stage3 {
-    background-image: url('designs/stage3.png');
+  background-image: url('designs/stage3.png');
+}
+
+.btn.stage.stage2,
+.btn.stage.stage3 {
+  position: relative; /* ::after를 덮기 위해 필요 */
+  overflow: hidden;   /* 혹시 자식 요소가 넘칠 경우 가려지도록 */
+}
+
+/* 공통 오버레이 스타일 */
+.btn.stage.stage2::after,
+.btn.stage.stage3::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* 어두운 반투명(50%) */
+  pointer-events: none; /* 클릭 등이 오버레이에 막히지 않도록 */
+  z-index: 1;
 }
 
 .difficulty-container {
@@ -214,8 +241,9 @@ body {
 .card {
     background: rgba(255, 255, 255, 0.9);
     border-radius: 10px;
-    padding: 20px;
+    padding: 20px 20px 10px 20px;
     display: flex;
+    flex-direction: column; /* 수직 배치 */
     align-items: center;
     gap: 10px;
     height: 23%;
@@ -224,19 +252,59 @@ body {
     margin-bottom: 2px;
 }
 
+.card-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+}
+
 .card-image {
-    height: 80%;
-    aspect-ratio: 1 / 1;width: auto;  /*정사각형으로 1대1 비율로 만들기*/
-    background: #FFE5B4;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    flex-shrink: 0;
+  /* 이제 부모 높이 대비 퍼센티지 대신, 고정 픽셀로 정사각형을 만든다 */
+  width: 72px;           /* 가로 50px */
+  aspect-ratio: 1 / 1;   /* 세로도 50px, 정사각형 유지 */
+  background: #FFE5B4;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  flex-shrink: 0;        /* flex 아이템 수축 방지 */
 }
 
 .card-text {
-    color: #333;
-    font-size: 14px;
-    font-weight: bold;
+  color: #333;
+  font-size: 14px;
+  font-weight: bold;
+  flex: 1;  /* 남은 공간 사용 */
+  text-align: left;
+}
+
+/* ========================= */
+/* 카드 이미지 + 게이지 래퍼 */
+/* ========================= */
+.card-image-container {
+  display: flex;
+  flex-direction: column;
+  width: auto; /* 기존 .card-image 너비에 맞춤 */
+  flex-shrink: 0;
+}
+
+.gauge-container {
+  position: relative;
+  width: 100%;
+  height: 3px;
+  background-color: #ddd;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.gauge-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #4caf50; /* 게이지 색상 */
+  transition: width 60s linear;
 }
 
 .center-panel {
@@ -586,3 +654,5 @@ body {
     bottom: 20px;  
     right: 20px; 
 }
+
+

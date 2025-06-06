@@ -63,7 +63,7 @@
 
           <div class="stage-option">
             <button
-              class="btn stage stage2"
+              class="btn stage stage2" disabled
               onclick="startGame('stage2')"
             ></button>
             <div class="stage-label">Stage 2</div>
@@ -75,7 +75,7 @@
 
           <div class="stage-option">
             <button
-              class="btn stage stage3"
+              class="btn stage stage3" disabled
               onclick="startGame('stage3')"
             ></button>
             <div class="stage-label">Stage 3</div>
@@ -111,9 +111,17 @@
                 <div class="left-panel">
                     <div class="card-container">
                         <div class="card">
-                            <div class="card-image"></div>
+                          <div class="card-content">
+                            <div class="card-image-container">
+                              <div class="card-image"></div>
+                            </div>
                             <div class="card-text">명함 1</div>
+                          </div>
+                          <div class="gauge-container">
+                            <div class="gauge-fill"></div>
+                          </div>
                         </div>
+
                         <div class="card">
                             <div class="card-image"></div>
                             <div class="card-text">명함 2</div>
@@ -228,7 +236,7 @@
 
           <div id="game-clear">
             <img src="designs/gameclear.png" alt="Stage Clear" class="gameclear-image" />
-            <button class="btn" onclick="playButtonSound(); showMainScreen()">next</button>
+            <button class="btn" onclick="playButtonSound();  nextStage()">next</button>
           </div>
 
 
