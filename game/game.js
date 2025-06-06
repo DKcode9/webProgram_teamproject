@@ -22,7 +22,13 @@ function hideAllScreens() {
 }
 
 function showMainScreen() {
+    currentScore = 0;
     hideAllScreens();
+    // 화면에 보이는 점수판도 0으로 초기화
+    const scoreDiv = document.getElementById('current-score');
+    if (scoreDiv) {
+      scoreDiv.textContent = 'Score: 0';
+    }
     $('#main-screen').addClass('active');
 }
 
@@ -763,9 +769,9 @@ function applyGuestBorders(stage, difficulty) {
       const gaugeFill = document.createElement('div');
       gaugeFill.classList.add('gauge-fill');
 
-      // 착한(good) 손님은 게이지 40초, 진상(bad) 손님은 게이지 100초 (나중에 보이는 것도 고려)
+      // 착한(good) 손님은 게이지 35초, 진상(bad) 손님은 게이지 90초 (나중에 보이는 것도 고려)
       // 착한 손님은 게이지 초록색, 진상 손님은 게이지 빨간색
-      const durationSeconds = guest.type === 'good' ? 40 : 100;
+      const durationSeconds = guest.type === 'good' ? 35 : 20;
       gaugeFill.style.backgroundColor = guest.type === 'good' ? 'green' : 'red';
 
       gaugeFill.style.transition = `width ${durationSeconds}s linear`;
@@ -777,6 +783,21 @@ function applyGuestBorders(stage, difficulty) {
       setTimeout(() => {
         gaugeFill.style.width = '0%';
       }, 0);
+
+      if (guest.type === 'bad') {
+        // durationSeconds - 15초 시점에 깜빡임 클래스 추가
+        const blinkDelay = (durationSeconds - 15) * 1000; // 밀리초 단위
+        const blinkTimer = setTimeout(() => {
+          card.classList.add('blink');
+        }, blinkDelay);
+
+        // durationSeconds 시점에 깜빡임 클래스 제거(게이지 끝나면 깜빡임 중지)
+        setTimeout(() => {
+          card.classList.remove('blink');
+          clearTimeout(blinkTimer);
+        }, durationSeconds * 1000);
+      }
+      // ─────────────────────────────────────────
 
       // durationSeconds 후에 게이지 컨테이너 제거
       setTimeout(() => {
@@ -2116,11 +2137,57 @@ document.addEventListener('keyup', handle => {
   if (handle.key === 'b') setSizehitBall(10); // 원상복구
   if (handle.key === 'a') addhitBall();  // hitBall 추가하기
   if (handle.key === 'd') setSpeedhitBall(15);
-  if (handle.key === 'e') setpaddlescale(400);
+  if (handle.key === 'e') setpaddlescale(400);  // 기본 paddle의 width는 60입니다
 });
 //--------------------------------//[ENDLINE] Ball//--------------------------------//
 
 
 
+/**
+ * 아직 적용까진 되지 않았습니다
+ * 
+ */
+
+/**
+ * 게이지 안에 착한 손님에게 레시피를 제공해 줄 경우 아래 세 가지 중 한가지 랜덤 효과 부여
+ * 
+ * 착한 1 : 공을 두배로 늘린다.
+	 착한 2 : 강화공 획득 -> 스테이지 지날수록 과일이 잘 안꺠져서 위 스킬 넣는게 좋을듯 합니다.(공 타격시 -2 로)
+	 착한 3 : paddle 을 1.3배로 늘린다.
+ */
+
+   function good1(){
+      setSizehitBall(20);
+   }
+
+   function good2(){
+    
+   }
+
+   function good3(){
+    setpaddlescale(80);
+   }
 
 
+
+/**
+ * 게이지 안에 진상 손님에게 레시피를 제공해주지 못할 경우 아래 세 가지중 한 가지 랜덤 패널티 부여
+ * 
+ * 게이지가 다 끝나면 패널티 부여 및 화난 이미지로 변경
+ * 
+ * 진상 1: 공의 스피드를 1.3배 늘린다.
+   진상 2 : 공의 크기를 작게 한다.(50%)
+   진상 3 : 판의 크기를 작게 한다.(50%)
+ */
+
+   function bad1(){
+    
+   }
+
+   function bad2(){
+    setSizehitBall(5);
+   }
+
+   function bad3(){
+    setpaddlescale(30);
+   }

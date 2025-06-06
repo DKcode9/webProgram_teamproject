@@ -665,3 +665,11 @@ body {
 }
 
 
+/* 깜빡임(blink) 애니메이션 */
+@keyframes blinker {
+  90% { opacity: 0; }
+}
+
+.blink {
+  animation: blinker 1s linear infinite;
+}
