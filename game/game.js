@@ -97,7 +97,7 @@ function proceedToStageScreen() {
         backToMain.style.display = 'flex';
         $('#back-to-main').css('display', 'none');
         gameCollapse();
-        endGame();
+        //endGame();
         // 2) 나머지 화면 전환 로직
         hideAllScreens();
         $('#stage-screen').addClass('active');
