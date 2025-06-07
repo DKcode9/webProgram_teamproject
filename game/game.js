@@ -1272,7 +1272,7 @@ let hitballs = []; // hitball 객체
 let shrink = 0.98; // tarBall 객체의 이미지가 잘릴 경우 보정하는 용도.
 let rotate_threshold_speed = 0.8 // 회전하기 위한 최소 속도 기준
 let angular_scale = 0.1 // 속도 -> 각속도 변환시 곱해주는 상수
-let max_angular_velocity = 0.005// 최대 각속도 제한
+let max_angular_velocity = 0.017// 최대 각속도 제한
 const ballImages = {};
 
 /*
@@ -1429,9 +1429,10 @@ class tarBall {
 
     } else {
       targetW = speed * angular_scale; // 0.1 계수 곱하기 
-      if ( targetW > max_angular_velocity ) 
+      if ( targetW > max_angular_velocity ){ 
         targetW = max_angular_velocity; // 최대 각속도 조절
         this.angularVelocity = targetW * 0.8 + this.angularVelocity*0.2; 
+      }
     }
     // 이번에 계산한 targetW(weighted value) + 이전 프레임에 남아있는 각속도에 90% weight 
     
