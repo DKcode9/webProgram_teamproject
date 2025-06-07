@@ -58,6 +58,9 @@ function showMainScreen() {
 function showDifficultyScreen() {
     hideAllScreens();
     $('#difficulty-screen').addClass('active');
+    let currentStage = '';
+    document.querySelector('.stage2').disabled =true;
+    document.querySelector('.stage3').disabled =true;
 }
 
 function showRuleScreen(){
@@ -120,7 +123,7 @@ function proceedToStageScreen() {
         backToMain.style.display = 'flex';
         $('#back-to-main').css('display', 'none');
         gameCollapse();
-        endGame();
+        //endGame();
         // 2) 나머지 화면 전환 로직
         hideAllScreens();
         $('#stage-screen').addClass('active');
@@ -176,17 +179,24 @@ function changeBgm(src) {
 
 function startGame(stage) {
     currentStage = stage;
+    currentScore = 0; 
+    const scoreDivt = document.getElementById('current-score');
+    if (scoreDivt) {
+      scoreDivt.textContent = `Score: ${currentScore}`;
+    }
     hideAllScreens();
 
     // stage 진입 효과음 재생
     playStageSound();
 
-    // 각 스테이지에 해당하는 스토리 화면 보여주기
+    //각 스테이지에 해당하는 스토리 화면 보여주기
     if (stage === 'stage1') {
-        $('#stage1-story-screen').addClass('active');
+      proceedToGame()
     } else if (stage === 'stage2') {
-        $('#stage2-story-screen').addClass('active');
+       $('#stage1-story-screen').addClass('active');
     } else if (stage === 'stage3') {
+        $('#stage2-story-screen').addClass('active');
+    } else if (stage === 'stage4') {
         $('#stage3-story-screen').addClass('active');
     }
 }
@@ -1323,8 +1333,8 @@ let paddle = null; // paddle 객체
 let hitballs = []; // hitball 객체
 let shrink = 0.98; // tarBall 객체의 이미지가 잘릴 경우 보정하는 용도.
 let rotate_threshold_speed = 0.8 // 회전하기 위한 최소 속도 기준
-let angular_scale = 0.1 // 속도 -> 각속도 변환시 곱해주는 상수
-let max_angular_velocity = 0.005// 최대 각속도 제한
+let angular_scale = 0.06 // 속도 -> 각속도 변환시 곱해주는 상수
+let max_angular_velocity = 0.017// 최대 각속도 제한
 const ballImages = {};
 
 /*
@@ -1473,7 +1483,9 @@ class tarBall {
 
     // 회전 part 
     // 1. 속도 계산
-    const speed = Math.hypot(this.vx, this.vy);
+    let speed = Math.hypot(this.vx, this.vy);
+    if (this.vx < 0)
+      speed *= -1;
     // 속도에 비례한 각속도 계산
     let targetW = null;
     if (speed < rotate_threshold_speed){
@@ -1482,9 +1494,11 @@ class tarBall {
 
     } else {
       targetW = speed * angular_scale; // 0.1 계수 곱하기 
-      if ( targetW > max_angular_velocity ) 
+      if ( targetW > max_angular_velocity ){ 
         targetW = max_angular_velocity; // 최대 각속도 조절
-        this.angularVelocity = targetW * 0.8 + this.angularVelocity*0.2; 
+      }  
+      this.angularVelocity = targetW * 0.8 + this.angularVelocity*0.2; 
+      
     }
     // 이번에 계산한 targetW(weighted value) + 이전 프레임에 남아있는 각속도에 90% weight 
     
@@ -1650,19 +1664,20 @@ class hitBall {
       // ( 너무 빠른 공은 dist = 0 으로 바뀌며 dividedByZero 버그 발생!)
 
       // 충돌 상황입니다. 공의 반지름보다 공 중심과 패들로부터 가장 가까운 부분까지의 거리가 더 작으면 파고든 상태입니다.
-      if (dist < this.radius) { 
-        
+      const cY = this.y;
+      const cX = this.x;
+      if (dist < this.radius) {     
         // 꼭짓점 부분에 닿았는지 확인하는 변수!
         const isVertexL = 
-          (this.y + this.radius >= paddle.y )&&
-          (this.y < paddle.y) &&
-          (this.x + this.radius >= paddle.x) &&
-          (this.x <= paddle.x);
+          (cY + this.radius >= paddle.y) &&
+          (cY < paddle.y) &&
+          (cX + this.radius >= paddle.x) &&
+          (cX <= paddle.x);
         const isVertexR = 
-          (this.y + this.radius >= paddle.y )&&
-          (this.y < paddle.y) &&
-          (this.x - this.radius <= paddle.x + paddle.width) &&
-          (this.x >= paddle.x + paddle.width);
+          (cY + this.radius >= paddle.y)&&
+          (cY < paddle.y) &&
+          (cX - this.radius <= paddle.x + paddle.width) &&
+          (cX >= paddle.x + paddle.width);
 
         if (!(isVertexL||isVertexR)) {
             // 그냥 paddle 윗면입니다.
@@ -1933,8 +1948,8 @@ function initBalls() { // tarBall & hitBall
         }
         break;
       case 'normal':
-        setSpeedhitBall(8);
-        hitball_speed = 8;
+        setSpeedhitBall(7);
+        hitball_speed = 7;
         switch (currentStage.toLowerCase()) {
           case 'stage1':
             spawnBalls = ballCnt_normal[0].slice();
@@ -1948,8 +1963,8 @@ function initBalls() { // tarBall & hitBall
         }
         break;
       case 'hard':
-        setSpeedhitBall(10);
-        hitball_speed = 10;
+        setSpeedhitBall(8);
+        hitball_speed = 8;
         switch (currentStage.toLowerCase()) {
           case 'stage1':
             spawnBalls = ballCnt_hard[0].slice();
@@ -2153,7 +2168,8 @@ function nextStage() {
     startGame('stage3');  // 자동으로 currentStage='stage3'가 됩니다.
   } else {
     // 예: stage3도 클리어했다면 메인 화면으로 돌아가거나, 원하는 다른 화면으로…
-    showMainScreen();
+    startGame('stage4');
+    //showMainScreen();
   }
 }
 
