@@ -8,14 +8,37 @@ let currentStage = '';
 // 점수판
 let currentScore = 0;
 
+
 $(document).ready(function() {
-    // 페이지가 로드되면 메인 화면 표시
-    showMainScreen();
+  showMainScreen();
 
   document.addEventListener('keydown', handleKeyDelete);
 
+  /**
+   * 진상 손님이 화면에 등장하면 패널티 부여
+   * 맨 위 카드 4장을 검사해서 bad 손님이 있으면 실행됩니다
+   * 진상 손님당 한번만 실행됩니다
+   */
+  function applyTop4BadPenalty() {
+    const cards = Array.from(document.querySelectorAll('.card'));
+    cards.slice(0, 4).forEach(card => {
+      if (card.dataset.type === 'bad' && !card.dataset.penaltyApplied) {
+        const penalties = [ bad1, bad2, bad3 ];
+        penalties[Math.floor(Math.random() * penalties.length)]();
+        card.dataset.penaltyApplied = 'true';
+      }
+    });
+  }
 
+  const container = document.querySelector('.card-container');
+  const observer = new MutationObserver(() => {
+    applyTop4BadPenalty();
+  });
+  observer.observe(container, { childList: true, subtree: true });
+
+  applyTop4BadPenalty();
 });
+
 
 function hideAllScreens() {
     $('.screen').removeClass('active');
@@ -310,10 +333,8 @@ function setStage(){
         }
     }
 
-
     // 난이도, 스테이지별로 손님 세팅
     applyGuestBorders(currentStage, currentDifficulty);
-
 
     // 난이도, 스테이지별로 레시피 세팅
 }
@@ -797,6 +818,10 @@ function applyGuestBorders(stage, difficulty) {
       guestLabel = '진상 손님';
     }
     card.style.border = `3px solid ${borderColor}`;
+
+    // 카드에 type도 dataset으로 저장
+    card.dataset.type = guest.type;
+
     card.dataset.recipeName = guest.recipe.name;
     cardText.innerHTML = `${guestLabel}<br>${guest.recipe.juiceName}`;
 
@@ -836,17 +861,8 @@ function applyGuestBorders(stage, difficulty) {
       }, 0);
 
       if (guest.type === 'bad') {
-        // durationSeconds - 15초 시점에 깜빡임 클래스 추가
-        const blinkDelay = (durationSeconds - 15) * 1000; // 밀리초 단위
-        const blinkTimer = setTimeout(() => {
-          card.classList.add('blink');
-        }, blinkDelay);
-
-        // durationSeconds 시점에 깜빡임 클래스 제거(게이지 끝나면 깜빡임 중지)
-        setTimeout(() => {
-          card.classList.remove('blink');
-          clearTimeout(blinkTimer);
-        }, durationSeconds * 1000);
+        // 깜빡임
+        card.classList.add('blink');
       }
       // ─────────────────────────────────────────
 
@@ -862,6 +878,8 @@ function applyGuestBorders(stage, difficulty) {
        * 단, 밑에 키보드 콜백을 사용하는 부분을 추가했습니다
       */
 
+
+    
     
     card.onclick = () => {
       if (card.style.backgroundColor !== 'yellow') return;
@@ -871,6 +889,25 @@ function applyGuestBorders(stage, difficulty) {
       const matchingRecipeDiv = document.querySelector(`.recipe[data-recipe-name="${recipeName}"]`);
       if (matchingRecipeDiv) {
         matchingRecipeDiv.remove();
+      }
+
+      // 2) 손님 타입별 점수 보상
+      switch (guest.type) {
+        case 'good':
+          currentScore += 200;
+          break;
+        case 'normal':
+          currentScore += 300;
+          break;
+        case 'bad':
+          currentScore += 500;
+          break;
+      }
+
+      if (guest.type === 'good') {
+        // 착한 손님 랜덤 버프
+        const buffs = [ good1, good2, good3 ];
+        buffs[Math.floor(Math.random() * buffs.length)]();
       }
 
       const recipe = [...specialRecipes, ...normalRecipes].find(r => r.name === recipeName);
@@ -900,8 +937,23 @@ function applyGuestBorders(stage, difficulty) {
       checkRecipes();
     };
 
+
+    
+
     cardContainer.appendChild(card);
   });
+
+  // ────────────────────────────────────────────
+  // 맨 위 4장의 카드 중 진상 손님 체크 & 패널티 적용
+  // ────────────────────────────────────────────
+  const top4BadIndex = guestList
+    .slice(0, 4)
+    .findIndex(g => g.type === 'bad');
+
+  if (top4BadIndex !== -1) {
+    const penalties = [bad1, bad2, bad3];
+    penalties[Math.floor(Math.random() * penalties.length)]();
+  }
 
  
 
@@ -1290,6 +1342,7 @@ let aniHandle = null; // animation sequence 를 중간에 중단시키기 위한
 $(document).ready(function() {
     canvas = document.getElementById("game-canvas");
     ctx= canvas.getContext('2d');
+    
 });
 
 
@@ -1843,10 +1896,10 @@ function initPaddle(){
   paddle = new Paddle();
   switch(currentDifficulty.toLowerCase()){
     case 'easy':
-      setpaddlescale(100);
+      setpaddlescale(80);
       break;
     case 'normal':
-      setpaddlescale(80);
+      setpaddlescale(70);
       break;
     case 'hard':
       setpaddlescale(60);
@@ -2234,7 +2287,7 @@ document.addEventListener('keyup', handle => {
  */
 
 /**
- * 게이지 안에 착한 손님에게 레시피를 제공해 줄 경우 아래 세 가지 중 한가지 랜덤 효과 부여
+ * 착한(good) 손님에게 레시피를 제공해 줄 경우 아래 세 가지 중 한가지 랜덤 효과 부여
  * 
  * 착한 1 : 공을 두배로 늘린다.
 	 착한 2 : 강화공 획득 -> 스테이지 지날수록 과일이 잘 안꺠져서 위 스킬 넣는게 좋을듯 합니다.(공 타격시 -2 로)
@@ -2243,20 +2296,23 @@ document.addEventListener('keyup', handle => {
 
    function good1(){
       setSizehitBall(20);
+      console.log('good1 invoked, current hitball speed: ' + hitball_speed);
    }
 
    function good2(){
       addspecialhitBall();
+      console.log('good2 invoked, added special hitball');
    }
 
    function good3(){
-    setpaddlescale(80);
+    setpaddlescale(120);
+    console.log('good3 invoked, current paddle scale: ' + paddle);
    }
 
 
 
 /**
- * 게이지 안에 진상 손님에게 레시피를 제공해주지 못할 경우 아래 세 가지중 한 가지 랜덤 패널티 부여
+ * 진상(bad) 손님이 맨 위 4개의 카드 안에 들어왔을 때, 세 가지 중 한 가지 패널티 부여여
  * 
  * 게이지가 다 끝나면 패널티 부여 및 화난 이미지로 변경
  * 
@@ -2266,13 +2322,16 @@ document.addEventListener('keyup', handle => {
  */
 
    function bad1(){
-    
+    setSpeedhitBall(hitball_speed*1.3);
+    console.log('bad1');
    }
 
    function bad2(){
     setSizehitBall(5);
+    console.log('bad2');
    }
 
    function bad3(){
-    setpaddlescale(30);
+    setpaddlescale(50);
+    console.log('bad3');
    }
