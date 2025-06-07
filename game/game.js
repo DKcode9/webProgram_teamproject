@@ -1271,7 +1271,7 @@ let paddle = null; // paddle 객체
 let hitballs = []; // hitball 객체
 let shrink = 0.98; // tarBall 객체의 이미지가 잘릴 경우 보정하는 용도.
 let rotate_threshold_speed = 0.8 // 회전하기 위한 최소 속도 기준
-let angular_scale = 0.1 // 속도 -> 각속도 변환시 곱해주는 상수
+let angular_scale = 0.06 // 속도 -> 각속도 변환시 곱해주는 상수
 let max_angular_velocity = 0.017// 최대 각속도 제한
 const ballImages = {};
 
@@ -1420,7 +1420,9 @@ class tarBall {
 
     // 회전 part 
     // 1. 속도 계산
-    const speed = Math.hypot(this.vx, this.vy);
+    let speed = Math.hypot(this.vx, this.vy);
+    if (this.vx < 0)
+      speed *= -1;
     // 속도에 비례한 각속도 계산
     let targetW = null;
     if (speed < rotate_threshold_speed){
@@ -1431,8 +1433,9 @@ class tarBall {
       targetW = speed * angular_scale; // 0.1 계수 곱하기 
       if ( targetW > max_angular_velocity ){ 
         targetW = max_angular_velocity; // 최대 각속도 조절
-        this.angularVelocity = targetW * 0.8 + this.angularVelocity*0.2; 
-      }
+      }  
+      this.angularVelocity = targetW * 0.8 + this.angularVelocity*0.2; 
+      
     }
     // 이번에 계산한 targetW(weighted value) + 이전 프레임에 남아있는 각속도에 90% weight 
     
@@ -1598,16 +1601,15 @@ class hitBall {
       // ( 너무 빠른 공은 dist = 0 으로 바뀌며 dividedByZero 버그 발생!)
 
       // 충돌 상황입니다. 공의 반지름보다 공 중심과 패들로부터 가장 가까운 부분까지의 거리가 더 작으면 파고든 상태입니다.
-      if (dist < this.radius) { 
-        
+      if (dist < this.radius) {     
         // 꼭짓점 부분에 닿았는지 확인하는 변수!
         const isVertexL = 
-          (this.y + this.radius >= paddle.y )&&
+          (this.y + this.radius >= paddle.y + 1) &&
           (this.y < paddle.y) &&
           (this.x + this.radius >= paddle.x) &&
           (this.x <= paddle.x);
         const isVertexR = 
-          (this.y + this.radius >= paddle.y )&&
+          (this.y + this.radius >= paddle.y + 1)&&
           (this.y < paddle.y) &&
           (this.x - this.radius <= paddle.x + paddle.width) &&
           (this.x >= paddle.x + paddle.width);
