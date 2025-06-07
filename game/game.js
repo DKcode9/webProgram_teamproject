@@ -35,6 +35,9 @@ function showMainScreen() {
 function showDifficultyScreen() {
     hideAllScreens();
     $('#difficulty-screen').addClass('active');
+    let currentStage = '';
+    document.querySelector('.stage2').disabled =true;
+    document.querySelector('.stage3').disabled =true;
 }
 
 function showRuleScreen(){
@@ -158,12 +161,14 @@ function startGame(stage) {
     // stage 진입 효과음 재생
     playStageSound();
 
-    // 각 스테이지에 해당하는 스토리 화면 보여주기
+    //각 스테이지에 해당하는 스토리 화면 보여주기
     if (stage === 'stage1') {
-        $('#stage1-story-screen').addClass('active');
+      proceedToGame()
     } else if (stage === 'stage2') {
-        $('#stage2-story-screen').addClass('active');
+       $('#stage1-story-screen').addClass('active');
     } else if (stage === 'stage3') {
+        $('#stage2-story-screen').addClass('active');
+    } else if (stage === 'stage4') {
         $('#stage3-story-screen').addClass('active');
     }
 }
@@ -2105,7 +2110,8 @@ function nextStage() {
     startGame('stage3');  // 자동으로 currentStage='stage3'가 됩니다.
   } else {
     // 예: stage3도 클리어했다면 메인 화면으로 돌아가거나, 원하는 다른 화면으로…
-    showMainScreen();
+    startGame('stage4');
+    //showMainScreen();
   }
 }
 
