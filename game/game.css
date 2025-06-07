@@ -700,7 +700,7 @@ body {
 
 /* 깜빡임(blink) 애니메이션 */
 @keyframes blinker {
-  95% { opacity: 25%; }
+  95% { opacity: 20%; }
 }
 
 .blink {
