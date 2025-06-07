@@ -1883,8 +1883,8 @@ function initBalls() { // tarBall & hitBall
         }
         break;
       case 'normal':
-        setSpeedhitBall(8);
-        hitball_speed = 8;
+        setSpeedhitBall(7);
+        hitball_speed = 7;
         switch (currentStage.toLowerCase()) {
           case 'stage1':
             spawnBalls = ballCnt_normal[0].slice();
@@ -1898,8 +1898,8 @@ function initBalls() { // tarBall & hitBall
         }
         break;
       case 'hard':
-        setSpeedhitBall(10);
-        hitball_speed = 10;
+        setSpeedhitBall(8);
+        hitball_speed = 8;
         switch (currentStage.toLowerCase()) {
           case 'stage1':
             spawnBalls = ballCnt_hard[0].slice();
