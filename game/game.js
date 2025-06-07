@@ -1216,6 +1216,14 @@ function addhitBall(){
   const newhitBall = new hitBall();
   hitballs.push(newhitBall);
 }
+
+function addspecialhitBall(){
+  if (gameOver) return;
+  const newhitBall = new hitBall();
+  newhitBall.special = 2;
+  hitballs.push(newhitBall);
+}
+
 // paddle 크기 설정
 function setpaddlescale(sz) {
     let retV = null;
@@ -1493,6 +1501,7 @@ class hitBall {
     this.y = canvas.height - 30; // 시작 위치
     this.vx = 0;     // 초기 속도(dx)
     this.vy = -hitball_speed;    // 초기 속도(dy)
+    this.special = 1;
   }
 
   draw() {
@@ -1704,7 +1713,12 @@ function hitBall_handleCollisions() {
           balls.splice(i, 1);
           i--; // 인덱스 보정
         } else {
-          b.breakCount -= 1;
+          if (hitball.special >= b.breakCount){
+            balls.splice(i, 1); 
+          } else {
+            b.breakCount -= hitball.special;
+          //b.breakCount -= 1;
+          }
         }
 
         playFruitHitSound();
@@ -2173,6 +2187,7 @@ document.addEventListener('keyup', handle => {
   if (handle.key === 'a') addhitBall();  // hitBall 추가하기
   if (handle.key === 'd') setSpeedhitBall(15);
   if (handle.key === 'e') setpaddlescale(400);  // 기본 paddle의 width는 60입니다
+  if (handle.key === 'f') addspecialhitBall();  // 기본 paddle의 width는 60입니다
 });
 //--------------------------------//[ENDLINE] Ball//--------------------------------//
 
