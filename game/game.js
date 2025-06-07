@@ -70,6 +70,12 @@ function showStageScreen(difficulty) {
         hideAllScreens();
         $('#story-screen').addClass('active');
         gameCollapse();
+
+        // bgm 다시 재생하도록 수정 
+        const bgm = document.getElementById('main-bgm');
+        if (bgm && bgm.paused) {
+            bgm.play();
+        }
     }
 
 }
