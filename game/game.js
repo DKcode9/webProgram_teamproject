@@ -1705,7 +1705,7 @@ function hitBall_handleCollisions() {
         hitball.x += Math.cos(angle) * pushDist;
         hitball.y += Math.sin(angle) * pushDist;
 
-        if (b.breakCount <= 1) {
+        if (hitball.special >= b.breakCount) {
           // 과일이 완전히 깨어질 때
           const fruitName = getFruitNameByIdent(b.ident);
           addScore(fruitName);
@@ -1719,12 +1719,9 @@ function hitBall_handleCollisions() {
           balls.splice(i, 1);
           i--; // 인덱스 보정
         } else {
-          if (hitball.special >= b.breakCount){
-            balls.splice(i, 1); 
-          } else {
             b.breakCount -= hitball.special;
           //b.breakCount -= 1;
-          }
+
         }
 
         playFruitHitSound();
