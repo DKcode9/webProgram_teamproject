@@ -100,7 +100,12 @@
 
       <div class="screen" id="stage3-story-screen">
         <button class="back-btn" onclick="playButtonSound(); proceedToStageScreen()">← 뒤로</button>
-        <button class="btn next-btn" onclick="playButtonSound(); showMainScreen()">다음</button>
+        <button class="btn next-btn" onclick="playButtonSound(); showGameFinishScreen()">다음</button>
+      </div>
+
+      <!-- 엔딩 화면 -->
+      <div class="screen" id="game-finish-screen">
+        <button class="btn next-btn" onclick="playButtonSound(); showMainScreen()">메인으로</button>
       </div>
 
          <!------------ 게임 화면 ------------>

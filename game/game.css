@@ -681,6 +681,22 @@ body {
     right: 20px; 
 }
 
+#game-finish-screen {
+    background-image: url('designs/game_finish.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #FFCC70;  
+    position: relative;
+    padding: 30px;
+}
+
+#game-finish-screen .next-btn {
+    position: absolute;
+    bottom: 20px;  
+    right: 20px; 
+}
+
 
 /* 깜빡임(blink) 애니메이션 */
 @keyframes blinker {

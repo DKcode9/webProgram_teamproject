@@ -73,6 +73,11 @@ function showStoryScreen(){
     $('#story-screen').addClass('active');
 }
 
+function showGameFinishScreen() {
+  hideAllScreens();
+  $('#game-finish-screen').addClass('active');
+}
+
 /**
  * 게임 시작시 : 난이도 선택 후 스토리 0을 보여주고 게임룰을 설명해준다. 그 후에 게임 스테이지 선택 화면으로 이동한다.
  * @param {*} difficulty 
@@ -2202,10 +2207,10 @@ function pauseGame() {
   hitballtimer = [];
 
   // 배경음악도 일시정지
-  const bgm = document.getElementById('main-bgm');
-  if (bgm && !bgm.paused) {
-    bgm.pause();
-  }
+  //const bgm = document.getElementById('main-bgm');
+  //if (bgm && !bgm.paused) {
+    //bgm.pause();
+  //}
 
   console.log("게임이 일시정지되었습니다.");
 }
