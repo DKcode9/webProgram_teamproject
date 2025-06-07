@@ -1601,18 +1601,20 @@ class hitBall {
       // ( 너무 빠른 공은 dist = 0 으로 바뀌며 dividedByZero 버그 발생!)
 
       // 충돌 상황입니다. 공의 반지름보다 공 중심과 패들로부터 가장 가까운 부분까지의 거리가 더 작으면 파고든 상태입니다.
+      const cY = this.y;
+      const cX = this.x;
       if (dist < this.radius) {     
         // 꼭짓점 부분에 닿았는지 확인하는 변수!
         const isVertexL = 
-          (this.y + this.radius >= paddle.y + 1) &&
-          (this.y < paddle.y) &&
-          (this.x + this.radius >= paddle.x) &&
-          (this.x <= paddle.x);
+          (cY + this.radius >= paddle.y) &&
+          (cY < paddle.y) &&
+          (cX + this.radius >= paddle.x) &&
+          (cX <= paddle.x);
         const isVertexR = 
-          (this.y + this.radius >= paddle.y + 1)&&
-          (this.y < paddle.y) &&
-          (this.x - this.radius <= paddle.x + paddle.width) &&
-          (this.x >= paddle.x + paddle.width);
+          (cY + this.radius >= paddle.y)&&
+          (cY < paddle.y) &&
+          (cX - this.radius <= paddle.x + paddle.width) &&
+          (cX >= paddle.x + paddle.width);
 
         if (!(isVertexL||isVertexR)) {
             // 그냥 paddle 윗면입니다.
