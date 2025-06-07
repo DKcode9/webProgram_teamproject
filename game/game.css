@@ -113,8 +113,8 @@ body {
 }
 
 /* 공통 오버레이 스타일 */
-.btn.stage.stage2::after,
-.btn.stage.stage3::after {
+.btn.stage.stage2:disabled::after,
+.btn.stage.stage3:disabled::after {
   content: "";
   position: absolute;
   top: 0;
