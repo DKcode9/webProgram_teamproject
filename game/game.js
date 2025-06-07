@@ -55,6 +55,11 @@ function showStoryScreen(){
 function showStageScreen(difficulty) {
     const backToMain = document.getElementById('back-to-main');
 
+    const scoreDiv = document.getElementById('current-score');
+    if (scoreDiv) {
+      scoreDiv.textContent = 'Score: 0';
+    }
+
     if (difficulty) {
         currentDifficulty = difficulty;
     }
