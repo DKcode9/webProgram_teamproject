@@ -307,7 +307,8 @@ function setStage(){
 }
 
 function resetGame() {
-   
+  hitball_speed = 7;
+  hitball_size  = 10;
 }
 
 
@@ -802,7 +803,7 @@ function applyGuestBorders(stage, difficulty) {
       // gauge-container 생성
       const gaugeContainer = document.createElement('div');
       gaugeContainer.classList.add('gauge-container');
-      gaugeContainer.style.height = '3px';
+      gaugeContainer.style.height = '0px';
 
       const gaugeFill = document.createElement('div');
       gaugeFill.classList.add('gauge-fill');
@@ -1828,6 +1829,17 @@ document.addEventListener('keyup', handle => {
 
 function initPaddle(){
   paddle = new Paddle();
+  switch(currentDifficulty.toLowerCase()){
+    case 'easy':
+      setpaddlescale(100);
+      break;
+    case 'normal':
+      setpaddlescale(80);
+      break;
+    case 'hard':
+      setpaddlescale(60);
+      break;
+  }
 }
 
 function initBalls() { // tarBall & hitBall
@@ -1838,9 +1850,11 @@ function initBalls() { // tarBall & hitBall
   mapImgs();
   let attempts = 0;
 
+
   let spawnBalls = []; // 각 난이도 및 스테이지가 결정되면, 스폰할 tarBall 들의 갯수 해당 변수에 들어갑니다. 
   switch (currentDifficulty.toLowerCase()) {
       case 'easy':
+        hitball_speed = 6;
         switch (currentStage.toLowerCase()) {
           case 'stage1':
             spawnBalls = ballCnt_easy[0].slice();
@@ -1854,6 +1868,8 @@ function initBalls() { // tarBall & hitBall
         }
         break;
       case 'normal':
+        setSpeedhitBall(8);
+        hitball_speed = 8;
         switch (currentStage.toLowerCase()) {
           case 'stage1':
             spawnBalls = ballCnt_normal[0].slice();
@@ -1867,6 +1883,8 @@ function initBalls() { // tarBall & hitBall
         }
         break;
       case 'hard':
+        setSpeedhitBall(10);
+        hitball_speed = 10;
         switch (currentStage.toLowerCase()) {
           case 'stage1':
             spawnBalls = ballCnt_hard[0].slice();
@@ -2148,8 +2166,8 @@ function gameCollapse(){
   paddle = null;
   hitballs = [];
   gameOver = true;
-  hitball_speed = 7;
-  hitball_size = 10;
+  // hitball_speed = 7;
+  // itball_size = 10;
   cutAnimationSequence();
 }
 
@@ -2166,8 +2184,6 @@ function restartGame(){
 function initGame() {
   initPaddle();
   initBalls(); 
-
-
 }
 
 function startGameInterval(){
@@ -2188,9 +2204,9 @@ document.addEventListener('keyup', handle => {
   if (handle.key === 'c') setSizehitBall(20); // 공크기 2배
   if (handle.key === 'b') setSizehitBall(10); // 원상복구
   if (handle.key === 'a') addhitBall();  // hitBall 추가하기
-  if (handle.key === 'd') setSpeedhitBall(15);
+  if (handle.key === 'd') setSpeedhitBall(15); // 기본 속도 7
   if (handle.key === 'e') setpaddlescale(400);  // 기본 paddle의 width는 60입니다
-  if (handle.key === 'f') addspecialhitBall();  // 기본 paddle의 width는 60입니다
+  if (handle.key === 'f') addspecialhitBall();  // 강화공 추가
 });
 //--------------------------------//[ENDLINE] Ball//--------------------------------//
 
@@ -2214,7 +2230,7 @@ document.addEventListener('keyup', handle => {
    }
 
    function good2(){
-    
+      addspecialhitBall();
    }
 
    function good3(){
