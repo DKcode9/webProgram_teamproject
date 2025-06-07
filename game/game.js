@@ -2408,22 +2408,26 @@ function bad3(){
 }
 
 
+// 타이머 아이디를 저장할 변수
+let _fadeTimeoutId = null;
+let _hideTimeoutId = null;
+
 function showEffectMessage(html) {
   const effectScreen = document.getElementById('effect-message');
   if (!effectScreen) return;
 
-  // 초기 상태
+  clearTimeout(_fadeTimeoutId);
+  clearTimeout(_hideTimeoutId);
+
   effectScreen.innerHTML = html;
   effectScreen.style.opacity = '1';
   effectScreen.style.display = 'flex';
 
-  // 1초 후에 페이드아웃 시작
-  setTimeout(() => {
+  _fadeTimeoutId = setTimeout(() => {
     effectScreen.style.opacity = '0';
   }, 1000);
 
-  // 페이드아웃(2초) + 대기(1초) 이후에 완전히 숨기기
-  setTimeout(() => {
+  _hideTimeoutId = setTimeout(() => {
     effectScreen.style.display = 'none';
   }, 1000 + 2000);
 }
