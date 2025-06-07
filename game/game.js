@@ -156,6 +156,11 @@ function changeBgm(src) {
 
 function startGame(stage) {
     currentStage = stage;
+    currentScore = 0; 
+    const scoreDivt = document.getElementById('current-score');
+    if (scoreDivt) {
+      scoreDivt.textContent = `Score: ${currentScore}`;
+    }
     hideAllScreens();
 
     // stage 진입 효과음 재생
