@@ -90,6 +90,12 @@ function proceedToStageScreen() {
         console.log("현재 화면은 게임 스크린, back-to-main 활성화");
         $('#back-to-main').css('display', 'flex');
         backToMain.style.display = 'flex';
+        $('#back-to-main').css('display', 'none');
+        gameCollapse();
+        endGame();
+        // 2) 나머지 화면 전환 로직
+        hideAllScreens();
+        $('#stage-screen').addClass('active');
     } else {
         $('#back-to-main').css('display', 'none');
         // 2) 나머지 화면 전환 로직
@@ -103,10 +109,11 @@ function proceedToRuleScreen() {
     $('#rule-screen').addClass('active');
 }
 
-function proceedToStageScreen() {
-    hideAllScreens();
-    $('#stage-screen').addClass('active');
-}
+
+//function proceedToStageScreen() {
+//    hideAllScreens();
+//    $('#stage-screen').addClass('active');
+//}
 
 
 function showSettingsScreen() {
@@ -2061,8 +2068,12 @@ function clearGame() {
 // 'stage2'이면 'stage3' 스토리 화면을 띄우도록 한다.
 function nextStage() {
   if (currentStage === 'stage1') {
+    const stage2Button = document.querySelector('.stage2');
+    if (stage2Button) stage2Button.disabled = false;
     startGame('stage2');  // 자동으로 currentStage='stage2'가 됩니다.
   } else if (currentStage === 'stage2') {
+    const stage3Button = document.querySelector('.stage3');
+    if (stage3Button) stage3Button.disabled = false;
     startGame('stage3');  // 자동으로 currentStage='stage3'가 됩니다.
   } else {
     // 예: stage3도 클리어했다면 메인 화면으로 돌아가거나, 원하는 다른 화면으로…

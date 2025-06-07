@@ -231,7 +231,7 @@
             <!-- Game Over 창 -->
           <div id="game-over">
             <img src="designs/gameover.png" alt="Game Over" class="gameover-image" />
-            <button class="btn" onclick="playButtonSound(); showMainScreen()">main</button>
+            <button class="btn" onclick="playButtonSound(); proceedToStageScreen()">main</button>
           </div>
 
           <div id="game-clear">
@@ -241,8 +241,8 @@
 
           <!-- 게임중 뒤로가기 버튼 클릭하면 나오는 창-->
           <div id="back-to-main">
-            <div>메인으로 이동합니다</div>
-            <button class="btn" onclick="playButtonSound(); showMainScreen()">확인</button>
+            <div>스테이지로 이동합니다</div>
+            <button class="btn" onclick="playButtonSound(); proceedToStageScreen()">확인</button>
             <button class="btn" onclick="playButtonSound(); resumeGame()">취소</button>
           </div>
           
