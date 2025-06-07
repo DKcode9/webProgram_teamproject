@@ -11,8 +11,9 @@ let currentScore = 0;
 
 $(document).ready(function() {
   showMainScreen();
-
   document.addEventListener('keydown', handleKeyDelete);
+
+  const appliedPenalties = new Set(); // 전역에서 중복 확인
 
   /**
    * 진상 손님이 화면에 등장하면 패널티 부여
@@ -23,8 +24,24 @@ $(document).ready(function() {
     const cards = Array.from(document.querySelectorAll('.card'));
     cards.slice(0, 4).forEach(card => {
       if (card.dataset.type === 'bad' && !card.dataset.penaltyApplied) {
-        const penalties = [ bad1, bad2, bad3 ];
-        penalties[Math.floor(Math.random() * penalties.length)]();
+        const allPenalties = [ bad1, bad2, bad3 ];
+
+        // 아직 적용되지 않은 패널티들만 선택
+        const availablePenalties = allPenalties.filter(fn => !appliedPenalties.has(fn));
+
+        let selectedPenalty;
+        if (availablePenalties.length > 0) {
+          selectedPenalty = availablePenalties[Math.floor(Math.random() * availablePenalties.length)];
+        } else {
+          // 모든 패널티가 한 번씩 적용되었으면 랜덤으로 선택 허용
+          selectedPenalty = allPenalties[Math.floor(Math.random() * allPenalties.length)];
+        }
+
+        // 패널티 부여
+        selectedPenalty();
+        appliedPenalties.add(selectedPenalty);
+
+        // 플래그 달아주기
         card.dataset.penaltyApplied = 'true';
       }
     });
@@ -38,6 +55,7 @@ $(document).ready(function() {
 
   applyTop4BadPenalty();
 });
+
 
 
 function hideAllScreens() {
@@ -246,7 +264,7 @@ function initializeCanvas() {
     ctx.font = '16px Arial';
     ctx.fillText('게임이 곧 시작됩니다...', canvas.width / 2, canvas.height / 2 + 70);
 
-    // 📝 추가: #current-stage에 표시
+    // 추가: #current-stage에 표시
     const panalDiv = document.getElementById('stage-panal');
     let difficultyColor = '#000';  // 기본 검정색
     let difficultyLabel = '';
@@ -271,6 +289,9 @@ function initializeCanvas() {
 
     const gameClearDiv = document.getElementById('game-clear');
     gameClearDiv.style.display = 'none';
+
+    const effectScreen = document.getElementById('effect-message');
+    if (effectScreen) effectScreen.style.display = 'none';
   
       
       
@@ -870,14 +891,19 @@ function applyGuestBorders(stage, difficulty) {
 
       card.appendChild(gaugeContainer);
 
-      // 게이지 애니메이션 시작 (다음 tick에 width를 0%로)
+      /**
+       * 게이지 제거하기로 해서 width를 0으로 설정
+       */
       setTimeout(() => {
         gaugeFill.style.width = '0%';
       }, 0);
 
+      /**
+       * 진상 손님 등장시 5초 동안 깜빡임 효과 
+       */
       if (guest.type === 'bad') {
-        // 깜빡임
         card.classList.add('blink');
+        
       }
       // ─────────────────────────────────────────
 
@@ -906,16 +932,21 @@ function applyGuestBorders(stage, difficulty) {
         matchingRecipeDiv.remove();
       }
 
+      const scoreDiv = document.getElementById('current-score');
+
       // 2) 손님 타입별 점수 보상
       switch (guest.type) {
         case 'good':
           currentScore += 200;
+          scoreDiv.textContent = `Score: ${currentScore}`;
           break;
         case 'normal':
           currentScore += 300;
+          scoreDiv.textContent = `Score: ${currentScore}`;
           break;
         case 'bad':
           currentScore += 500;
+          scoreDiv.textContent = `Score: ${currentScore}`;
           break;
       }
 
@@ -975,7 +1006,7 @@ function applyGuestBorders(stage, difficulty) {
   guestList.forEach(guest => {
     const recipeDiv = document.createElement('div');
     recipeDiv.classList.add('recipe');
-    // ★ 여기서 recipeDiv에 data-recipe-name 속성 추가
+    // 여기서 recipeDiv에 data-recipe-name 속성 추가
     recipeDiv.dataset.recipeName = guest.recipe.name;
     const headerDiv = document.createElement('div');
     headerDiv.classList.add('recipe-header');
@@ -2318,22 +2349,31 @@ document.addEventListener('keyup', handle => {
    function good1(){
       setSizehitBall(20);
       console.log('good1 invoked, current hitball speed: ' + hitball_speed);
+      showEffectMessage(
+        '<div><strong class="good-buff">착한 손님 효과!</strong><br>공의 크기가 커집니다.</div>'
+      );
    }
 
    function good2(){
       addspecialhitBall();
       console.log('good2 invoked, added special hitball');
+      showEffectMessage(
+        '<div><strong class="good-buff">착한 손님 효과!</strong><br>강화된 공이 추가됩니다.</div>'
+      );
    }
 
    function good3(){
     setpaddlescale(120);
     console.log('good3 invoked, current paddle scale: ' + paddle);
+    showEffectMessage(
+        '<div><strong class="good-buff">착한 손님 효과!</strong><br>패들이 넓어집니다.</div>'
+      );
    }
 
 
 
 /**
- * 진상(bad) 손님이 맨 위 4개의 카드 안에 들어왔을 때, 세 가지 중 한 가지 패널티 부여여
+ * 진상(bad) 손님이 맨 위 4개의 카드 안에 들어왔을 때, 세 가지 중 한 가지 패널티 부여
  * 
  * 게이지가 다 끝나면 패널티 부여 및 화난 이미지로 변경
  * 
@@ -2342,17 +2382,48 @@ document.addEventListener('keyup', handle => {
    진상 3 : 판의 크기를 작게 한다.(50%)
  */
 
-   function bad1(){
-    setSpeedhitBall(hitball_speed*1.3);
-    console.log('bad1');
-   }
 
-   function bad2(){
-    setSizehitBall(5);
-    console.log('bad2');
-   }
+function bad1(){
+  setSpeedhitBall(hitball_speed * 1.4);
+  console.log('bad1');
+  showEffectMessage(
+    '<div><strong class="bad-panelty">진상 등장!</strong><br>공의 스피드가 증가합니다.</div>'
+  );
+}
 
-   function bad3(){
-    setpaddlescale(50);
-    console.log('bad3');
-   }
+function bad2(){
+  setSizehitBall(5);
+  console.log('bad2');
+  showEffectMessage(
+    '<div><strong class="bad-panelty">진상 등장!</strong><br>공의 크기가 작아집니다.</div>'
+  );
+}
+
+function bad3(){
+  setpaddlescale(50);
+  console.log('bad3');
+  showEffectMessage(
+    '<div><strong class="bad-panelty">진상 등장!</strong><br>패들이 좁아집니다.</div>'
+  );
+}
+
+
+function showEffectMessage(html) {
+  const effectScreen = document.getElementById('effect-message');
+  if (!effectScreen) return;
+
+  // 초기 상태
+  effectScreen.innerHTML = html;
+  effectScreen.style.opacity = '1';
+  effectScreen.style.display = 'flex';
+
+  // 1초 후에 페이드아웃 시작
+  setTimeout(() => {
+    effectScreen.style.opacity = '0';
+  }, 1000);
+
+  // 페이드아웃(2초) + 대기(1초) 이후에 완전히 숨기기
+  setTimeout(() => {
+    effectScreen.style.display = 'none';
+  }, 1000 + 2000);
+}

@@ -236,7 +236,7 @@
             <!-- Game Over 창 -->
           <div id="game-over">
             <img src="designs/gameover.png" alt="Game Over" class="gameover-image" />
-            <button class="btn" onclick="playButtonSound(); proceedToStageScreen()">main</button>
+            <button class="btn" onclick="playButtonSound(); proceedToStageScreen()">돌아가기</button>
           </div>
 
           <div id="game-clear">
@@ -249,6 +249,20 @@
             <div>스테이지로 이동합니다</div>
             <button class="btn" onclick="playButtonSound(); proceedToStageScreen()">확인</button>
             <button class="btn" onclick="playButtonSound(); resumeGame()">취소</button>
+          </div>
+
+          <div id="effect-message">
+            <div>버프/디버프를 나타내는 화면</div>
+            <div style="margin-top: 10px;">
+              <strong>진상 손님 패널티 설명</strong><br>
+              진상(bad) 손님이 맨 위 4개의 카드 안에 들어왔을 때, 세 가지 중 한 가지 패널티가 부여됩니다.<br>
+              게이지가 끝나면 패널티가 적용되며, 손님의 이미지가 화난 얼굴로 변경됩니다.<br>
+              <ul>
+                <li><strong>진상 1:</strong> 공의 스피드를 1.3배로 증가</li>
+                <li><strong>진상 2:</strong> 공의 크기를 50%로 축소</li>
+                <li><strong>진상 3:</strong> 패들의 크기를 50%로 축소</li>
+              </ul>
+            </div>
           </div>
           
 
