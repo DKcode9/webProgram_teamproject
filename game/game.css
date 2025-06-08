@@ -1,0 +1,764 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(180deg, #FFE5B4 0%, #FFCC70 50%, #FF9500 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    width: 1000px;
+    height: 700px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.screen {
+    display: none;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.screen.active {
+    display: flex;
+}
+
+#main-screen {
+    background-image: url('designs/main_background.png'); /* 파일명을 적절히 변경 */
+    background-size: cover; /* 화면 꽉 채우기 */
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.title {
+    font-size: 48px;
+    color: white;
+    margin-bottom: 50px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.btn {
+    background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    margin: 10px;
+    border-radius: 25px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn.secondary {
+    background: linear-gradient(45deg, #74b9ff, #0984e3);
+}
+
+.btn.difficulty {
+    background: linear-gradient(45deg, #00b894, #00a085);
+    width: 150px;
+}
+
+.btn.stage {
+    width: 150px;
+    height: 150px;
+    margin: 0 15px;
+    background: linear-gradient(45deg, #74c0fc, #4dabf7);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* disabled 상태(클릭 불가능)일 때 */
+.btn.stage:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* (기존에 쓰시던 배경 이미지는 그대로 두세요) */
+.btn.stage.stage1 {
+  background-image: url('designs/stage1.png');
+}
+
+.btn.stage.stage2 {
+  background-image: url('designs/stage2.png');
+}
+
+.btn.stage.stage3 {
+  background-image: url('designs/stage3.png');
+}
+
+.btn.stage.stage2,
+.btn.stage.stage3 {
+  position: relative; /* ::after를 덮기 위해 필요 */
+  overflow: hidden;   /* 혹시 자식 요소가 넘칠 경우 가려지도록 */
+}
+
+/* 공통 오버레이 스타일 */
+.btn.stage.stage2:disabled::after,
+.btn.stage.stage3:disabled::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* 어두운 반투명(50%) */
+  pointer-events: none; /* 클릭 등이 오버레이에 막히지 않도록 */
+  z-index: 1;
+}
+
+.difficulty-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.stage-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.stage-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.stage-option:hover .btn.stage {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.stage-label {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* 설명 */
+.stage-desc {
+    font-size: 14px;
+    color: #555;
+    text-align: center;
+    line-height: 1.4;
+    max-width: 160px;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: all 0.3s ease;
+}
+
+/* hover 시 설명 보여주기 */
+.stage-option:hover .stage-desc {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.settings-content {
+    color: white;
+    font-size: 20px;
+    text-align: center;
+}
+
+.subtitle {
+    font-size: 24px;
+    color: white;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* ------------------------ 게임 화면 레이아웃 --------------------------- */
+.game-layout {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    padding: 60px 20px 20px 20px;
+}
+
+.left-panel {
+    flex: 0 0 300px;
+    background: rgba(135, 206, 235, 0.8);
+    border-radius: 15px;
+    padding: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    flex-direction: column;
+}
+
+.card-container {
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    padding: 20px 20px 10px 20px;
+    display: flex;
+    flex-direction: column; /* 수직 배치 */
+    align-items: center;
+    gap: 10px;
+    height: 23%;
+    flex-shrink: 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2px;
+
+    position: relative;         /* transform 애니메이션을 위해 필요 */
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* 'slide-out' 클래스가 붙으면 왼쪽으로 이동 + 투명해진다 */
+.card.slide-out {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+}
+
+.card-image {
+  /* 이제 부모 높이 대비 퍼센티지 대신, 고정 픽셀로 정사각형을 만든다 */
+  width: 72px;           /* 가로 50px */
+  aspect-ratio: 1 / 1;   /* 세로도 50px, 정사각형 유지 */
+  background: #FFE5B4;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  flex-shrink: 0;        /* flex 아이템 수축 방지 */
+}
+
+.card-text {
+  color: #333;
+  font-size: 14px;
+  font-weight: bold;
+  flex: 1;  /* 남은 공간 사용 */
+  text-align: left;
+}
+
+/* ========================= */
+/* 카드 이미지 + 게이지 래퍼 */
+/* ========================= */
+.card-image-container {
+  display: flex;
+  flex-direction: column;
+  width: auto; /* 기존 .card-image 너비에 맞춤 */
+  flex-shrink: 0;
+}
+
+.gauge-container {
+  position: relative;
+  width: 100%;
+  height: 3px;
+  background-color: #ddd;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.gauge-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #4caf50; /* 게이지 색상 */
+  transition: width 60s linear;
+}
+
+.center-panel {
+    flex: 1;
+    background: rgba(153, 204, 255, 0.8);
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+#game-canvas {
+    background: #e6f5ff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    height: 600px; /* 명시적으로 높이 설정 */
+}
+
+.right-panel {
+    flex: 0 0 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100%;
+}
+
+.right-top-panel {
+    flex: 1 1 40%;
+    background: rgba(135, 206, 235, 0.8);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column; /* 자식 요소를 위에서 아래로 배치 */
+    padding: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    gap: 5px;
+    overflow: hidden; 
+}
+
+.right-bottom-panel {
+    flex: 1 1 35%;
+    background: rgba(135, 206, 235, 0.8);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+#stage-panel {
+    flex: 0 0 10%;          /* 높이 고정 */
+    height: auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 0px;
+    background-color: rgba(135, 206, 235, 0.8);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#stage-div {
+  display: flex;           
+  flex-direction: row;     /* 좌우 배치 */
+  width: 100%;             /* 부모 폭 채우기 */
+  justify-content: space-around;  /* 또는 space-between/center 등 */
+  gap: 5px;                /* 원하는 간격 */
+}
+
+#current-stage,
+#current-difficulty {
+    width: 50%; /* 부모 폭 채우기 */
+    /* box-sizing: border-box; padding, border 포함 */
+    font-size: 16px;
+    font-weight: bold;
+    background: transparent;
+    border-radius: 10px;
+    padding: 4px 8px;
+    /* border: 2px solid rgba(255, 255, 255, 0.3); ／／ rgba(135, 206, 235, 0.8); */
+    text-align: center;
+}
+
+#current-score {
+    font-size: 16px;
+    font-weight: bold;
+    background: transparent;
+    border-radius: 10px;
+    padding: 4px 8px;
+    /* border: 2px solid rgba(255, 255, 255, 0.3); ／／ rgba(135, 206, 235, 0.8); */
+    text-align: center;
+}
+
+
+.panel-content {
+    flex: 0 0 24px; /* 높이 고정 */; /* 남은 공간 모두 차지 */
+    color: #333;
+    font-size: 18px;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.recipe-list {
+    width: 100%;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.recipe {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    padding: 4px 6px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.recipe-image {
+    width: 32px;
+    height: 32px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.recipe-name {
+    font-size: 13px;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 2px;
+}
+
+.ingredient-list {
+    list-style-type: disc;
+    margin-left: 16px;
+    font-size: 12px;
+    color: #555;
+    padding-left: 0;
+    margin-top: 2px;
+}
+
+/* 바구니 */
+
+.basket {
+    flex: 0 0 auto;   /* 높이 고정 (flex-grow: 0, flex-shrink: 0) */
+    height: 280px;
+    margin: 10px;
+    padding: 4px;
+    width: 95%;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.fruit {
+    display: flex;
+    justify-content: space-between;  /* 왼쪽: 과일명, 오른쪽: 개수 */
+    align-items: center;
+    width: 100%;                     /* 부모 크기에 맞춤 */
+    box-sizing: border-box;          /* padding 포함 */
+    padding: 4px 8px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    margin-bottom: 4px;
+}
+
+.fruit-content {
+    flex: 1;                          /* 왼쪽에 넓게 차지 */
+    text-align: left;
+    font-weight: bold;
+    color: #333;
+}
+
+#f1, #f2, #f3, #f4, #f5, #f6, #f7, #f8 {
+    min-width: 40px;                 /* 동일한 폭 확보 (필요에 따라 조절) */
+    text-align: right;
+    font-weight: bold;
+    color: #333;
+}
+
+#game-over{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.7); /* 반투명 배경 */
+  display: none; /* 기본적으로 숨김 */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10; 
+}
+
+#game-over .gameover-image {
+    max-width: 300px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+#game-over .btn {
+    font-size: 20px;
+    padding: 12px 30px;
+}
+
+#game-clear{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.7); /* 반투명 배경 */
+  display: none; /* 기본적으로 숨김 */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10; 
+}
+
+#game-clear .gameclear-image {
+    max-width: 400px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+#game-clear .btn {
+    font-size: 20px;
+    padding: 12px 30px;
+}
+
+#game-clear .game-over-content {
+  background-color: #fff;
+  padding: 20px 40px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+
+#game-over .game-over-content {
+  background-color: #fff;
+  padding: 20px 40px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+#back-to-main {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px 40px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 환경설정 화면 꾸미기 */
+.settings-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 20px 30px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    font-size: 18px;
+    width: 400px; /* 고정 폭 */
+    margin: 0 auto; /* 중앙 정렬 */
+}
+
+.settings-content label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+    color: #fff;
+}
+
+.settings-content input[type="color"],
+.settings-content input[type="range"],
+.settings-content select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.3);
+    color: #000;
+    font-size: 16px;
+}
+
+.settings-content span {
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+#story-screen,
+#stage1-story-screen,
+#stage2-story-screen,
+#stage3-story-screen {
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #FFCC70;  
+    position: relative;
+    padding: 30px;
+}
+
+/* 각각 background-image 설정만 개별로 */
+#story-screen {
+    background-image: url('designs/story00.png');
+}
+
+#stage1-story-screen {
+    background-image: url('designs/story01.png');
+}
+
+#stage2-story-screen {
+    background-image: url('designs/story02.png');
+}
+
+#stage3-story-screen {
+    background-image: url('designs/story03.png');
+}
+
+/* next-btn 위치 통일 */
+#story-screen .next-btn,
+#stage1-story-screen .next-btn,
+#stage2-story-screen .next-btn,
+#stage3-story-screen .next-btn {
+    position: absolute;
+    bottom: 20px;  
+    right: 20px; 
+}
+
+#rule-screen {
+    background-image: url('designs/rule.png'); /* 원하는 이미지 파일명 */
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #FFCC70;  
+    position: relative;
+    padding: 30px;
+}
+
+#rule-screen .next-btn {
+    position: absolute;
+    bottom: 20px;  
+    right: 20px; 
+}
+
+#game-finish-screen {
+    background-image: url('designs/game_finish.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #FFCC70;  
+    position: relative;
+    padding: 30px;
+}
+
+#game-finish-screen .next-btn {
+    position: absolute;
+    bottom: 20px;  
+    right: 20px; 
+}
+
+
+/* 깜빡임(blink) 애니메이션 */
+@keyframes blinker {
+  95% { opacity: 20%; }
+}
+
+.blink {
+  animation: blinker 1s linear infinite;
+}
+
+/* 효과, 버프 표시 화면 */
+#effect-message {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed;
+    top: 40%;            /* 화면 위쪽으로 조금 더 올림 */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 204, 112, 0.9);
+    padding: 20px 40px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    /* 페이드 아웃 전환 추가 */
+    opacity: 1;
+    transition: opacity 2s ease-out;
+}
+
+.bad-panelty {
+    color: red;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.good-buff {
+    color: greenyellow;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+#back-to-main {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    background-color: rgba(255, 204, 112, 0.9);
+    padding: 20px 40px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    opacity: 1;
+    transition: opacity 2s ease-out; /* 페이드 아웃 전환 추가 */
+}
