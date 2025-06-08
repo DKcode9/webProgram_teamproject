@@ -1146,15 +1146,13 @@ function checkRecipes() {
  * @returns 
  */
 function removeCardWithAnimation(card) {
-  // 이미 삭제 애니메이션이 진행 중이라면 두 번 실행하지 않도록
   if (card.classList.contains('slide-out')) return;
-  // 카드에 'slide-out' 클래스를 추가하여 애니메이션 실행
   card.classList.add('slide-out');
   // 애니메이션 끝나는 시점(transitionend) 감지 → 실제로 DOM에서 제거
   card.addEventListener('transitionend', function onEnd(e) {
     // transform 혹은 opacity에 대한 transition이 끝났을 때만 실행
     if (e.propertyName === 'transform' || e.propertyName === 'opacity') {
-      card.remove();              // DOM에서 완전히 삭제
+      card.remove();           
       card.removeEventListener('transitionend', onEnd);
     }
   });
@@ -1971,6 +1969,7 @@ function initBalls() { // tarBall & hitBall
   switch (currentDifficulty.toLowerCase()) {
       case 'easy':
         hitball_speed = 6;
+        hitball_size = 12;
         switch (currentStage.toLowerCase()) {
           case 'stage1':
             spawnBalls = ballCnt_easy[0].slice();
@@ -1986,6 +1985,7 @@ function initBalls() { // tarBall & hitBall
       case 'normal':
         setSpeedhitBall(7);
         hitball_speed = 7;
+        hitball_size = 11;
         switch (currentStage.toLowerCase()) {
           case 'stage1':
             spawnBalls = ballCnt_normal[0].slice();
@@ -2001,6 +2001,7 @@ function initBalls() { // tarBall & hitBall
       case 'hard':
         setSpeedhitBall(8);
         hitball_speed = 8;
+        hitball_size = 10;
         switch (currentStage.toLowerCase()) {
           case 'stage1':
             spawnBalls = ballCnt_hard[0].slice();
@@ -2074,6 +2075,7 @@ function initBalls() { // tarBall & hitBall
   }} ,2000));
 
 }
+
 function animate() {
   /* 
     setInterval() 대신, requestAnimationFrame() 을 이용하여 콜백 함수가 
@@ -2095,6 +2097,21 @@ function animate() {
   tarBall_handleCollisions();
   for (const ball of balls) {
     ball.draw();
+  }
+
+  switch (currentDifficulty.toLowerCase()) {
+      case 'easy':
+        hitball_speed = 6;
+        hitball_size = 12;
+        break;
+      case 'normal':
+        hitball_speed = 7;
+        hitball_size = 11;
+        break;
+      case 'hard':
+        hitball_speed = 8;
+        hitball_size = 10;
+        break;
   }
 
   for (const hb of hitballs){
@@ -2333,10 +2350,6 @@ document.addEventListener('keyup', handle => {
 
 
 
-/**
- * 아직 적용까진 되지 않았습니다
- * 
- */
 
 /**
  * 착한(good) 손님에게 레시피를 제공해 줄 경우 아래 세 가지 중 한가지 랜덤 효과 부여
